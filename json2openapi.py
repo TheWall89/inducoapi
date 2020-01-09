@@ -25,23 +25,20 @@ def create_element(d: Dict) -> Dict:
     for key, val in d.items():
         el[key] = {}
         el[key]["description"] = "None"
-        # Recursive cases
-        if type(val) is dict:
+        if type(val) is dict:  # Recursive cases
             el[key]["type"] = "object"
             el[key]["properties"] = create_element(val)
         elif type(val) is list:
             el[key]["type"] = "array"
             el[key]["items"] = {}
-            if val and type(val[0]) is dict:
+            el[key]["items"]["description"] = "None"
+            if val and type(val[0]) is dict:  # Recursive cases
                 el[key]["items"]["type"] = "object"
-                el[key]["items"]["description"] = "None"
                 el[key]["items"]["properties"] = create_element(val[0])
-            elif val:
+            elif val:  # base case
                 el[key]["items"]["type"] = get_type(val[0])
-                el[key]["items"]["description"] = "None"
                 el[key]["items"]["example"] = val[0]
-        # base case
-        else:
+        else:  # base case
             el[key]["type"] = get_type(val)
             el[key]["example"] = val
     return el
