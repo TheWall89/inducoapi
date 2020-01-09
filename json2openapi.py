@@ -29,14 +29,14 @@ def create_element(d: Dict) -> Dict:
     for key, val in d.items():
         el[key] = {}
         el[key]["description"] = "None"
-        if type(val) is dict:  # Recursive cases
+        if type(val) is dict:  # recursive case
             el[key]["type"] = "object"
             el[key]["properties"] = create_element(val)
         elif type(val) is list:
             el[key]["type"] = "array"
             el[key]["items"] = {}
             el[key]["items"]["description"] = "None"
-            if val and type(val[0]) is dict:  # Recursive cases
+            if val and type(val[0]) is dict:  # recursive case
                 el[key]["items"]["type"] = "object"
                 el[key]["items"]["properties"] = create_element(val[0])
             elif val:  # base case
