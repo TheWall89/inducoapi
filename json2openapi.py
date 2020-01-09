@@ -1,23 +1,27 @@
 import json
-import sys
-from typing import Dict, List, AnyStr
+from typing import Dict, Tuple, Any
 
+import sys
 import yaml
 
 
-def get_type(val) -> AnyStr:
-    if type(val) is str or val is None:
-        res = "string"
+def get_type_ex(val: Any) -> Tuple[str, Any]:
+    ex = val
+    if val is None:
+        t = "string"
+        ex = ""
+    elif type(val) is str:
+        t = "string"
     elif type(val) is int:
-        res = "integer"
+        t = "integer"
     elif type(val) is float:
-        res = "number"
+        t = "number"
     elif type(val) is bool:
-        res = "boolean"
+        t = "boolean"
     else:
-        res = ""
+        t = ""
         print("unknown type: {}, value: {}".format(type(val), val))
-    return res
+    return t, ex
 
 
 def create_element(d: Dict) -> Dict:
@@ -36,11 +40,9 @@ def create_element(d: Dict) -> Dict:
                 el[key]["items"]["type"] = "object"
                 el[key]["items"]["properties"] = create_element(val[0])
             elif val:  # base case
-                el[key]["items"]["type"] = get_type(val[0])
-                el[key]["items"]["example"] = val[0]
+                el[key]["items"]["type"], el[key]["items"]["example"] = get_type_ex(val[0])
         else:  # base case
-            el[key]["type"] = get_type(val)
-            el[key]["example"] = val
+            el[key]["type"], el[key]["example"] = get_type_ex(val)
     return el
 
 
