@@ -28,19 +28,18 @@ def create_element(d: Dict) -> Dict:
     el = {}
     for key, val in d.items():
         el[key] = {}
-        el[key]["description"] = "None"
         if type(val) is dict:  # recursive case
             el[key]["type"] = "object"
             el[key]["properties"] = create_element(val)
         elif type(val) is list:
             el[key]["type"] = "array"
             el[key]["items"] = {}
-            el[key]["items"]["description"] = "None"
             if val and type(val[0]) is dict:  # recursive case
                 el[key]["items"]["type"] = "object"
                 el[key]["items"]["properties"] = create_element(val[0])
             elif val:  # base case
-                el[key]["items"]["type"], el[key]["items"]["example"] = get_type_ex(val[0])
+                el[key]["items"]["type"], el[key]["items"][
+                    "example"] = get_type_ex(val[0])
         else:  # base case
             el[key]["type"], el[key]["example"] = get_type_ex(val)
     return el
@@ -51,8 +50,12 @@ class NoAliasDumper(yaml.Dumper):
         return True
 
 
-if __name__ == '__main__':
+def main():
     with open(sys.argv[1]) as json_file:
         json_data = json.load(json_file)
         schema = create_element(json_data)
         print(yaml.dump(schema, indent=2, Dumper=NoAliasDumper))
+
+
+if __name__ == '__main__':
+    main()
