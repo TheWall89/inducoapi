@@ -1,7 +1,7 @@
+import argparse
 import json
 from typing import Dict, Tuple, Any
 
-import sys
 import yaml
 
 
@@ -51,10 +51,64 @@ class NoAliasDumper(yaml.Dumper):
 
 
 def main():
-    with open(sys.argv[1]) as json_file:
-        json_data = json.load(json_file)
-        schema = create_element(json_data)
-        print(yaml.dump(schema, indent=2, Dumper=NoAliasDumper))
+    descr = "Simple script to generate OpenAPI block from JSON request/response"
+    parser = argparse.ArgumentParser("json2openapi.py", description=descr)
+    parser.add_argument("req_m", type=str,
+                        choices=["GET", "POST", "PUT", "PATCH", "DELETE"],
+                        help="HTTP request method")
+    parser.add_argument("resp_code", type=int, help="Response code")
+    parser.add_argument("--req-path", "-req", type=str,
+                        help="Path to JSON file containing request body")
+    parser.add_argument("--resp-path", "-resp", type=str,
+                        help="Path to JSON file containing response body")
+    args = parser.parse_args()
+    res = {
+        args.req_m.lower(): {}
+    }
+    if args.req_path:
+        with open(args.req_path) as req_path:
+            req_body = json.load(req_path)
+            res[args.req_m.lower()]["requestBody"] = {
+                "content": {
+                    "application/json": {
+                        "type": "object",
+                        "properties": create_element(req_body)
+                    },
+                    "application/yaml": {
+                        "type": "object",
+                        "properties": create_element(req_body)
+                    }
+                }
+            }
+
+    if args.resp_path:
+        with open(args.resp_path) as resp_path:
+            resp_body = json.load(resp_path)
+            if isinstance(resp_body, list) and resp_body:
+                schema = {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": create_element(resp_body[0])
+                    }
+                }
+            else:
+                schema = {
+                    "type": "object",
+                    "properties": create_element(resp_body)
+                }
+            res[args.req_m.lower()]["responses"] = {
+                args.resp_code: {
+                    "content": {
+                        "application/json": {
+                            "schema": schema
+                        },
+                        "application/yaml": {
+                            "schema": schema
+                        }
+                    }
+                }}
+    print(yaml.dump(res, indent=2, Dumper=NoAliasDumper, sort_keys=False))
 
 
 if __name__ == '__main__':
