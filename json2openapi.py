@@ -71,12 +71,16 @@ def main():
             res[args.req_m.lower()]["requestBody"] = {
                 "content": {
                     "application/json": {
-                        "type": "object",
-                        "properties": create_element(req_body)
+                        "schema": {
+                            "type": "object",
+                            "properties": create_element(req_body)
+                        }
                     },
                     "application/yaml": {
-                        "type": "object",
-                        "properties": create_element(req_body)
+                        "schema": {
+                            "type": "object",
+                            "properties": create_element(req_body)
+                        }
                     }
                 }
             }
