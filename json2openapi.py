@@ -88,19 +88,21 @@ def main():
                         help="Path to JSON file containing response body")
     args = parser.parse_args()
     res = {
-        args.req_m.lower(): {}
+        args.path: {
+            args.req_m.lower(): {}
+        }
     }
     if args.req_json:
         with open(args.req_json) as req_json:
             req_body = json.load(req_json)
-            res[args.req_m.lower()]["requestBody"] = {
+            res[args.path][args.req_m.lower()]["requestBody"] = {
                 "content": _gen_content(req_body)
             }
 
     if args.resp_json:
         with open(args.resp_json) as resp_json:
             resp_body = json.load(resp_json)
-            res[args.req_m.lower()]["responses"] = {
+            res[args.path][args.req_m.lower()]["responses"] = {
                 args.resp_code: {
                     "content": _gen_content(resp_body)
                 }
