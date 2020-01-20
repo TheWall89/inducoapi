@@ -24,25 +24,49 @@ def get_type_ex(val: Any) -> Tuple[str, Any]:
     return t, ex
 
 
-def create_element(d: Dict) -> Dict:
+def _gen_properties(d: Dict) -> Dict:
     el = {}
     for key, val in d.items():
         el[key] = {}
         if type(val) is dict:  # recursive case
             el[key]["type"] = "object"
-            el[key]["properties"] = create_element(val)
+            el[key]["properties"] = _gen_properties(val)
         elif type(val) is list:
             el[key]["type"] = "array"
             el[key]["items"] = {}
             if val and type(val[0]) is dict:  # recursive case
                 el[key]["items"]["type"] = "object"
-                el[key]["items"]["properties"] = create_element(val[0])
+                el[key]["items"]["properties"] = _gen_properties(val[0])
             elif val:  # base case
                 el[key]["items"]["type"], el[key]["items"][
                     "example"] = get_type_ex(val[0])
         else:  # base case
             el[key]["type"], el[key]["example"] = get_type_ex(val)
     return el
+
+
+def _gen_content(json_data) -> Dict:
+    if not json_data:
+        # TODO raise exception
+        pass
+    if isinstance(json_data, list):
+        schema = {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": _gen_properties(json_data[0])
+            }
+        }
+    else:
+        schema = {
+            "type": "object",
+            "properties": _gen_properties(json_data)
+        }
+    return {
+        "application/json": {
+            "schema": schema
+        }
+    }
 
 
 class NoAliasDumper(yaml.Dumper):
@@ -69,49 +93,18 @@ def main():
         with open(args.req_path) as req_path:
             req_body = json.load(req_path)
             res[args.req_m.lower()]["requestBody"] = {
-                "content": {
-                    "application/json": {
-                        "schema": {
-                            "type": "object",
-                            "properties": create_element(req_body)
-                        }
-                    },
-                    "application/yaml": {
-                        "schema": {
-                            "type": "object",
-                            "properties": create_element(req_body)
-                        }
-                    }
-                }
+                "content": _gen_content(req_body)
             }
 
     if args.resp_path:
         with open(args.resp_path) as resp_path:
             resp_body = json.load(resp_path)
-            if isinstance(resp_body, list) and resp_body:
-                schema = {
-                    "type": "array",
-                    "items": {
-                        "type": "object",
-                        "properties": create_element(resp_body[0])
-                    }
-                }
-            else:
-                schema = {
-                    "type": "object",
-                    "properties": create_element(resp_body)
-                }
             res[args.req_m.lower()]["responses"] = {
                 args.resp_code: {
-                    "content": {
-                        "application/json": {
-                            "schema": schema
-                        },
-                        "application/yaml": {
-                            "schema": schema
-                        }
-                    }
-                }}
+                    "content": _gen_content(resp_body)
+                }
+            }
+
     print(yaml.dump(res, indent=2, Dumper=NoAliasDumper, sort_keys=False))
 
 
