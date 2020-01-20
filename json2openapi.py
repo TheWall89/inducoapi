@@ -104,6 +104,7 @@ def main():
             resp_body = json.load(resp_json)
             res[args.path][args.req_m.lower()]["responses"] = {
                 args.resp_code: {
+                    "description": "",
                     "content": _gen_content(resp_body)
                 }
             }
