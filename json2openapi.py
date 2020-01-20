@@ -80,25 +80,26 @@ def main():
     parser.add_argument("req_m", type=str,
                         choices=["GET", "POST", "PUT", "PATCH", "DELETE"],
                         help="HTTP request method")
+    parser.add_argument("path", type=str, help="REST resource path")
     parser.add_argument("resp_code", type=int, help="Response code")
-    parser.add_argument("--req-path", "-req", type=str,
+    parser.add_argument("--req-json", "-reqj", type=str,
                         help="Path to JSON file containing request body")
-    parser.add_argument("--resp-path", "-resp", type=str,
+    parser.add_argument("--resp-json", "-respj", type=str,
                         help="Path to JSON file containing response body")
     args = parser.parse_args()
     res = {
         args.req_m.lower(): {}
     }
-    if args.req_path:
-        with open(args.req_path) as req_path:
-            req_body = json.load(req_path)
+    if args.req_json:
+        with open(args.req_json) as req_json:
+            req_body = json.load(req_json)
             res[args.req_m.lower()]["requestBody"] = {
                 "content": _gen_content(req_body)
             }
 
-    if args.resp_path:
-        with open(args.resp_path) as resp_path:
-            resp_body = json.load(resp_path)
+    if args.resp_json:
+        with open(args.resp_json) as resp_json:
+            resp_body = json.load(resp_json)
             res[args.req_m.lower()]["responses"] = {
                 args.resp_code: {
                     "content": _gen_content(resp_body)
