@@ -86,6 +86,7 @@ def main():
                         help="Path to JSON file containing request body")
     parser.add_argument("--resp-json", "-respj", type=str,
                         help="Path to JSON file containing response body")
+    parser.add_argument("--output", "-o", type=str, help="Output file.")
     args = parser.parse_args()
     res = {
         args.path: {
@@ -109,7 +110,11 @@ def main():
                 }
             }
 
-    print(yaml.dump(res, indent=2, Dumper=NoAliasDumper, sort_keys=False))
+    if args.output:
+        with open(args.output, "w") as o:
+            yaml.dump(res, o, indent=2, Dumper=NoAliasDumper, sort_keys=False)
+    else:
+        print(yaml.dump(res, indent=2, Dumper=NoAliasDumper, sort_keys=False))
 
 
 if __name__ == '__main__':
