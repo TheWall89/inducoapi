@@ -1,5 +1,6 @@
 import argparse
 import json
+from json import JSONDecodeError
 from typing import Dict, Tuple, Any, Union, List
 
 import yaml
@@ -10,7 +11,7 @@ from openapi3.errors import SpecError
 def _get_type_ex(val: Any) -> Tuple[str, Any]:
     ex = val
     if val is None:
-        # If no value is provided, assume None
+        # If no value is provided, assume string
         t = "string"
         ex = ""
     elif isinstance(val, str):
@@ -68,7 +69,7 @@ def main():
                         help="Path to JSON file containing request body")
     parser.add_argument("--resp-json", "-respj", type=str,
                         help="Path to JSON file containing response body")
-    parser.add_argument("--output", "-o", type=str, help="Output file.")
+    parser.add_argument("--output", "-o", type=str, help="Output file")
     args = parser.parse_args()
 
     path = {
@@ -79,28 +80,36 @@ def main():
 
     if args.req_json:
         with open(args.req_json) as req_json:
-            req_body = json.load(req_json)
-            path[args.path][args.req_m.lower()]["requestBody"] = {
-                "content": {
-                    "application/json": {
-                        "schema": _gen_schema(req_body)
-                    }
-                }
-            }
-
-    if args.resp_json:
-        with open(args.resp_json) as resp_json:
-            resp_body = json.load(resp_json)
-            path[args.path][args.req_m.lower()]["responses"] = {
-                args.resp_code: {
-                    "description": "",
+            try:
+                req_body = json.load(req_json)
+                path[args.path][args.req_m.lower()]["requestBody"] = {
                     "content": {
                         "application/json": {
-                            "schema": _gen_schema(resp_body)
+                            "schema": _gen_schema(req_body)
                         }
                     }
                 }
-            }
+            except JSONDecodeError:
+                print("JSON in {} looks not valid, skip request generation".
+                      format(args.req_json))
+
+    if args.resp_json:
+        with open(args.resp_json) as resp_json:
+            try:
+                resp_body = json.load(resp_json)
+                path[args.path][args.req_m.lower()]["responses"] = {
+                    args.resp_code: {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": _gen_schema(resp_body)
+                            }
+                        }
+                    }
+                }
+            except JSONDecodeError:
+                print("JSON in {} looks not valid, skip response generation".
+                      format(args.req_json))
 
     oapi = {
         "openapi": "3.0.0",
@@ -122,6 +131,7 @@ def main():
             yaml.dump(oapi, o, indent=2, Dumper=NoAliasDumper, sort_keys=False)
         print("Output written to {}".format(args.output))
     else:
+        print("---")
         print(yaml.dump(oapi, indent=2, Dumper=NoAliasDumper, sort_keys=False))
 
 
