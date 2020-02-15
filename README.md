@@ -151,3 +151,13 @@ paths:
 ```
 
 </details>
+
+If you want to directly put the generated OpenApi spec in a YAML file, just add `-o ./openapi.yaml`
+
+## TODO list
+
+- [ ] Add support for `application/yaml`
+- [ ] Add an integrated HTTP client to get responses from the service
+- [ ] Add support for `headers`
+- [ ] Add support for `links`
+- [ ] Add support for `format`
