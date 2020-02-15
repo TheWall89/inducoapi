@@ -153,7 +153,7 @@ paths:
 
 </details>
 
-If you want to directly put the generated OpenApi spec in a YAML file, just add `-o ./openapi.yaml`
+If you want to directly write the generated OpenApi spec in a YAML file, just add `-o ./openapi.yaml`
 
 ## TODO list
 
