@@ -41,7 +41,10 @@ def _get_type_ex(val: Any) -> Tuple[str, Any]:
     else:
         t = ""
         print("unknown type: {}, value: {}".format(type(val), val))
-    return t, ex
+    return {
+        "type": t,
+        "example": ex
+    }
 
 
 def _gen_schema(data: Union[Dict, List]) -> Dict:
@@ -60,11 +63,7 @@ def _gen_schema(data: Union[Dict, List]) -> Dict:
         if data:
             schema["items"] = _gen_schema(data[0])
     else:
-        t, ex = _get_type_ex(data)
-        schema = {
-            "type": t,
-            "example": ex
-        }
+        schema = _get_type_ex(data)
     return schema
 
 
