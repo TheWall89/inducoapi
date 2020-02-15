@@ -40,7 +40,7 @@ $ pipenv run python json2openapi.py GET /employees 200
 ```
 
 <details><summary>output</summary>
-<p>
+
 ```
 OpenAPI looks valid.
 ---
@@ -56,7 +56,7 @@ paths:
           description: ''
           content: null
 ```
-</p>
+
 </details>
 
 Now, a GET request with an empty response is not quite useful.
@@ -67,8 +67,8 @@ $ pipenv run python json2openapi.py GET /employees 200 -respj ./examples/employe
 ```
 
 <details><summary>output</summary>
-<p>
-```
+
+```shell script
 OpenAPI looks valid.
 ---
 openapi: 3.0.0
@@ -98,6 +98,6 @@ paths:
                       type: string
                       example: salesman
 ```
-</p>
+
 </details>
 
