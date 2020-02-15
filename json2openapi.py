@@ -89,6 +89,7 @@ def main():
     path = {
         args.path: {
             args.req_m.lower(): {
+                "requestBody": {},
                 "responses": {
                     args.resp_code: {
                         "description": "",
