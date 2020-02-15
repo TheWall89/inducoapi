@@ -88,7 +88,14 @@ def main():
 
     path = {
         args.path: {
-            args.req_m.lower(): {}
+            args.req_m.lower(): {
+                "responses": {
+                    args.resp_code: {
+                        "description": "",
+                        "content": None
+                    }
+                }
+            }
         }
     }
 
@@ -111,16 +118,13 @@ def main():
         with open(args.resp_json) as resp_json:
             try:
                 resp_body = json.load(resp_json)
-                path[args.path][args.req_m.lower()]["responses"] = {
-                    args.resp_code: {
-                        "description": "",
-                        "content": {
-                            "application/json": {
-                                "schema": _gen_schema(resp_body)
-                            }
+                resp_content = {
+                        "application/json": {
+                            "schema": _gen_schema(resp_body)
                         }
-                    }
                 }
+                path[args.path][args.req_m.lower()]["responses"][
+                    args.resp_code]["content"] = resp_content
             except JSONDecodeError:
                 print("JSON in {} looks not valid, skip response generation".
                       format(args.req_json))
