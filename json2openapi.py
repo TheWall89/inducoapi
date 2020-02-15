@@ -72,7 +72,7 @@ class NoAliasDumper(yaml.Dumper):
         return True
 
 
-def main():
+def _get_parser():
     descr = "Simple script to generate OpenAPI block from JSON request/response"
     parser = argparse.ArgumentParser("json2openapi.py", description=descr)
     parser.add_argument("req_m", type=str,
@@ -85,7 +85,11 @@ def main():
     parser.add_argument("--resp-json", "-respj", type=str,
                         help="Path to JSON file containing response body")
     parser.add_argument("--output", "-o", type=str, help="Output file")
-    args = parser.parse_args()
+    return parser
+
+
+def main():
+    args = _get_parser().parse_args()
 
     path = {
         args.path: {
