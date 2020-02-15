@@ -33,8 +33,9 @@ $ pipenv install
 $ pipenv run ./json2openapi.py --help
 ```
 
-Let's consider a simple case.
-You have an HTTP service managing employees.
+## Example
+
+Let's consider a simple case: you have an HTTP service managing employees.
 We want to generate OpenApi spec for a GET on all the employees, returning a 200 status code:
 
 ```shell script
