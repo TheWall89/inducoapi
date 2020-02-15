@@ -4,15 +4,16 @@ A simple python program to generate OpenApi documentation by supplying JSON requ
 
 ## Motivation
 
-Sometimes you have an fully functioning HTTP service without documentation.
-At some point in time, others may need to use your service and they ask you to provide the OpenApi spec.
-Writing the documentation by hand is a pain and can feel like an overwhelming job.
-_json2openapi_ helps you generate your OpenApi specification by providing requests/responses examples plus some
+Sometimes you have a fully functioning HTTP service without documentation.
+At some point in time, others may need to use your service and they ask you to provide the OpenApi specification.
+Writing the documentation by hand is a pain and can feel like an overwhelming job for complex services.
+_json2openapi_ helps you generate your OpenApi specification by taking as input request/response examples plus some
 other information.
 
 The generated OpenApi specification is validated with [openapi3](https://github.com/Dorthu/openapi3).
 
-Input examples can be found in [examples](./examples).
+_Warning_: This program also generates the `example` fields in OpenApi schemas by default.
+If you have sensible data in your request/response files, disable this feature with `--no-example`
 
 ## Installation
 
@@ -62,6 +63,7 @@ paths:
 
 Now, a GET request with an empty response is not quite useful.
 Let's add an argument with a JSON file containing a response example.
+Input examples can be found in [examples](./examples).
 
 ```shell script
 $ pipenv run ./json2openapi.py GET /employees 200 -respj ./examples/employees.json
@@ -157,7 +159,8 @@ If you want to directly write the generated OpenApi spec in a YAML file, just ad
 
 ## TODO list
 
-- [ ] Add support for `application/yaml`
+- [ ] Add support for request/response files in YAML
+- [ ] Add support for `application/yaml` content
 - [ ] Add an integrated HTTP client to get responses from the service
 - [ ] Add support for `headers`
 - [ ] Add support for `links`
