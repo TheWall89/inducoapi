@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 #  Copyright 2020 Matteo Pergolesi <matpergo [at] gmail [dot] com>
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -120,9 +122,9 @@ def main():
             try:
                 resp_body = json.load(resp_json)
                 resp_content = {
-                        "application/json": {
-                            "schema": _gen_schema(resp_body)
-                        }
+                    "application/json": {
+                        "schema": _gen_schema(resp_body)
+                    }
                 }
                 path[args.path][args.req_m.lower()]["responses"][
                     args.resp_code]["content"] = resp_content
