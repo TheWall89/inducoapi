@@ -23,6 +23,8 @@ import yaml
 from openapi3 import OpenAPI
 from openapi3.errors import SpecError
 
+_example = False
+
 
 def _get_type_ex(val: Any) -> Tuple[str, Any]:
     ex = val
@@ -41,10 +43,12 @@ def _get_type_ex(val: Any) -> Tuple[str, Any]:
     else:
         t = ""
         print("unknown type: {}, value: {}".format(type(val), val))
-    return {
-        "type": t,
-        "example": ex
-    }
+
+    global _example
+    if _example:
+        return {"type": t, "example": ex}
+    else:
+        return {"type": t}
 
 
 def _gen_schema(data: Union[Dict, List]) -> Dict:
@@ -85,11 +89,16 @@ def _get_parser():
     parser.add_argument("--resp-json", "-respj", type=str,
                         help="Path to JSON file containing response body")
     parser.add_argument("--output", "-o", type=str, help="Output file")
+    parser.add_argument("--no-example", "-ne", dest="example", default=True,
+                        action="store_false",
+                        help="Do not generate schema examples")
     return parser
 
 
 def main():
     args = _get_parser().parse_args()
+    global _example
+    _example = args.example
 
     path = {
         args.path: {
