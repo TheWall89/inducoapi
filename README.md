@@ -29,7 +29,7 @@ $ pipenv install
 `json2openapi.py` provides its own help. Check it out with:
 
 ```shell script
-$ pipenv run python json2openapi.py --help
+$ pipenv run ./json2openapi.py --help
 ```
 
 Let's consider a simple case.
@@ -37,7 +37,7 @@ You have an HTTP service managing employees.
 We want to generate OpenApi spec for a GET on all the employees, returning a 200 status code:
 
 ```shell script
-$ pipenv run python json2openapi.py GET /employees 200
+$ pipenv run ./json2openapi.py GET /employees 200
 ```
 
 <details><summary>output</summary>
@@ -64,7 +64,7 @@ Now, a GET request with an empty response is not quite useful.
 Let's add an argument with a JSON file containing a response example.
 
 ```shell script
-$ pipenv run python json2openapi.py GET /employees 200 -respj ./examples/employees.json
+$ pipenv run ./json2openapi.py GET /employees 200 -respj ./examples/employees.json
 ```
 
 <details><summary>output</summary>
@@ -105,7 +105,7 @@ paths:
 Finally, let's try a POST request with both request and response.
 
 ```shell script
-$ pipenv run python json2openapi.py POST /employees 201 -reqj ./examples/new_employee_req.json -respj ./examples/new_employee_resp.json
+$ pipenv run ./json2openapi.py POST /employees 201 -reqj ./examples/new_employee_req.json -respj ./examples/new_employee_resp.json
 ```
 
 <details><summary>output</summary>
