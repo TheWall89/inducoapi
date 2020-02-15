@@ -10,8 +10,9 @@ Writing the documentation by hand is a pain and can feel like an overwhelming jo
 _json2openapi_ helps you generate your OpenApi specification by providing requests/responses examples plus some
 other information.
 
-Validation
-Examples
+The generated OpenApi specification is validated with [openapi3](https://github.com/Dorthu/openapi3).
+
+Input examples can be found in [examples](./examples).
 
 ## Installation
 
