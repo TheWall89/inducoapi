@@ -182,7 +182,6 @@ def main():
             yaml.dump(oapi, o, indent=2, Dumper=NoAliasDumper, sort_keys=False)
         print("Output written to {}".format(args.output))
     else:
-        print("---")
         print(yaml.dump(oapi, indent=2, Dumper=NoAliasDumper, sort_keys=False))
 
 
