@@ -116,11 +116,9 @@ def main():
     path = {
         args.path: {
             args.method.lower(): {
-                "requestBody": {},
                 "responses": {
                     args.resp_code: {
                         "description": "",
-                        "content": None
                     }
                 }
             }
@@ -130,14 +128,13 @@ def main():
     if args.request:
         request_load = _load_file(args.request)
         if request_load:
-            request_body = {
+            path[args.path][args.method.lower()]["requestBody"] = {
                 "content": {
                     "application/json": {
                         "schema": _gen_schema(request_load)
                     }
                 }
             }
-            path[args.path][args.method.lower()]["requestBody"] = request_body
         else:
             print("{} looks not valid, skip request generation".
                   format(args.request))
@@ -145,13 +142,12 @@ def main():
     if args.response:
         response_load = _load_file(args.response)
         if response_load:
-            response_content = {
+            path[args.path][args.method.lower()]["responses"][
+                args.resp_code]["content"] = {
                 "application/json": {
                     "schema": _gen_schema(response_load)
                 }
             }
-            path[args.path][args.method.lower()]["responses"][
-                args.resp_code]["content"] = response_content
         else:
             print("{} looks not valid, skip response generation".
                   format(args.response))
