@@ -77,8 +77,8 @@ class NoAliasDumper(yaml.Dumper):
 
 
 def _get_parser():
-    descr = "A simple python program to generate OpenApi documentation by" \
-            "supplying request/response bodies. "
+    descr = "A simple python program to generate OpenApi documentation by " \
+            "supplying request/response bodies"
     fmt = argparse.ArgumentDefaultsHelpFormatter
     usage = "%(prog)s METHOD PATH CODE [options]"
     parser = argparse.ArgumentParser("json2openapi.py", description=descr,
@@ -101,7 +101,7 @@ def _get_parser():
                         help="Do not generate schema examples")
     parser.add_argument("--media-type", type=str,
                         default="application/json", metavar="STR",
-                        help="Desired media type to be used.")
+                        help="Desired media type to be used")
     return parser
 
 
