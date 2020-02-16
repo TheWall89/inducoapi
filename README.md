@@ -1,6 +1,6 @@
 # json2openapi
 
-A simple python program to generate OpenApi documentation by supplying JSON request/response bodies.
+A simple python program to generate OpenApi documentation by supplying request/response bodies.
 
 ## Motivation
 
