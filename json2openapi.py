@@ -86,8 +86,8 @@ def _get_parser():
                         metavar="PATH")
     parser.add_argument("resp_code", type=int, help="HTTP response code",
                         metavar="CODE")
-    parser.add_argument("--req-json", "-reqj", type=str,
-                        help="Path to JSON file containing request body")
+    parser.add_argument("--request", "-req", type=str,
+                        help="File path containing request body")
     parser.add_argument("--resp-json", "-respj", type=str,
                         help="Path to JSON file containing response body")
     parser.add_argument("--output", "-o", type=str, help="Output file")
@@ -116,10 +116,10 @@ def main():
         }
     }
 
-    if args.req_json:
-        with open(args.req_json) as req_json:
+    if args.request:
+        with open(args.request) as request:
             try:
-                req_body = json.load(req_json)
+                req_body = json.load(request)
                 path[args.path][args.method.lower()]["requestBody"] = {
                     "content": {
                         "application/json": {
@@ -128,8 +128,8 @@ def main():
                     }
                 }
             except JSONDecodeError:
-                print("JSON in {} looks not valid, skip request generation".
-                      format(args.req_json))
+                print("{} looks not valid, skip request generation".
+                      format(args.request))
 
     if args.resp_json:
         with open(args.resp_json) as resp_json:
