@@ -93,28 +93,29 @@ def _get_parser():
             "supplying request/response bodies"
     fmt = argparse.ArgumentDefaultsHelpFormatter
     usage = "%(prog)s METHOD PATH CODE [options]"
-    parser = argparse.ArgumentParser("json2openapi.py", description=descr,
-                                     usage=usage, formatter_class=fmt)
-    parser.add_argument("method", type=str,
-                        choices=["GET", "POST", "PUT", "PATCH", "DELETE"],
-                        help="HTTP request method", metavar="METHOD")
-    parser.add_argument("path", type=str, help="URI path",
-                        metavar="PATH")
-    parser.add_argument("resp_code", type=int, help="HTTP response code",
-                        metavar="CODE")
-    parser.add_argument("--request", type=str, metavar="PATH",
-                        help="Path to file containing request body")
-    parser.add_argument("--response", type=str, metavar="PATH",
-                        help="Path to file containing response body")
-    parser.add_argument("--output", type=str, metavar="PATH",
-                        help="Path to output file")
-    parser.add_argument("--no-example", "-ne", dest="example", default=True,
-                        action="store_false",
-                        help="Do not generate schema examples")
-    parser.add_argument("--media-type", type=str,
-                        default="application/json", metavar="STR",
-                        help="Desired media type to be used")
-    return parser
+    p = argparse.ArgumentParser("json2openapi.py", description=descr,
+                                usage=usage, formatter_class=fmt)
+    p.add_argument("method", type=str,
+                   choices=["GET", "POST", "PUT", "PATCH", "DELETE"],
+                   metavar="METHOD",
+                   help="HTTP request method")
+    p.add_argument("path", type=str, metavar="PATH",
+                   help="URI path")
+    p.add_argument("resp_code", type=int, metavar="CODE",
+                   help="HTTP response code")
+    p.add_argument("--request", type=str, metavar="PATH",
+                   help="Path to file containing request body")
+    p.add_argument("--response", type=str, metavar="PATH",
+                   help="Path to file containing response body")
+    p.add_argument("--output", type=str, metavar="PATH",
+                   help="Path to output file")
+    p.add_argument("--no-example", "-ne", dest="example", default=True,
+                   action="store_false",
+                   help="Do not generate schema examples")
+    p.add_argument("--media-type", type=str, default="application/json",
+                   metavar="STR",
+                   help="Desired media type to be used")
+    return p
 
 
 def main():
