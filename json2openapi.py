@@ -87,9 +87,9 @@ def _get_parser():
     parser.add_argument("resp_code", type=int, help="HTTP response code",
                         metavar="CODE")
     parser.add_argument("--request", "-req", type=str,
-                        help="File path containing request body")
-    parser.add_argument("--resp-json", "-respj", type=str,
-                        help="Path to JSON file containing response body")
+                        help="Path to file containing request body")
+    parser.add_argument("--response", "-rsp", type=str,
+                        help="Path to file containing response body")
     parser.add_argument("--output", "-o", type=str, help="Output file")
     parser.add_argument("--no-example", "-ne", dest="example", default=True,
                         action="store_false",
@@ -131,10 +131,10 @@ def main():
                 print("{} looks not valid, skip request generation".
                       format(args.request))
 
-    if args.resp_json:
-        with open(args.resp_json) as resp_json:
+    if args.response:
+        with open(args.response) as response:
             try:
-                resp_body = json.load(resp_json)
+                resp_body = json.load(response)
                 resp_content = {
                     "application/json": {
                         "schema": _gen_schema(resp_body)
@@ -143,8 +143,8 @@ def main():
                 path[args.path][args.method.lower()]["responses"][
                     args.resp_code]["content"] = resp_content
             except JSONDecodeError:
-                print("JSON in {} looks not valid, skip response generation".
-                      format(args.req_json))
+                print("{} looks not valid, skip response generation".
+                      format(args.response))
 
     oapi = {
         "openapi": "3.0.0",
