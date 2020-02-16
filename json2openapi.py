@@ -17,7 +17,7 @@
 import argparse
 import json
 from json import JSONDecodeError
-from typing import Dict, Tuple, Any, Union, List
+from typing import Dict, Tuple, Any, Union, List, Optional
 
 import yaml
 from openapi3 import OpenAPI
@@ -97,6 +97,17 @@ def _get_parser():
     return parser
 
 
+def _load_file(file: str) -> Optional[Dict]:
+    with open(file) as f:
+        try:
+            return json.load(f)
+        except JSONDecodeError:
+            try:
+                return yaml.load(f)
+            except yaml.YAMLError:
+                return None
+
+
 def main():
     args = _get_parser().parse_args()
     global _example
@@ -117,34 +128,33 @@ def main():
     }
 
     if args.request:
-        with open(args.request) as request:
-            try:
-                req_body = json.load(request)
-                path[args.path][args.method.lower()]["requestBody"] = {
-                    "content": {
-                        "application/json": {
-                            "schema": _gen_schema(req_body)
-                        }
+        request_load = _load_file(args.request)
+        if request_load:
+            request_body = {
+                "content": {
+                    "application/json": {
+                        "schema": _gen_schema(request_load)
                     }
                 }
-            except JSONDecodeError:
-                print("{} looks not valid, skip request generation".
-                      format(args.request))
+            }
+            path[args.path][args.method.lower()]["requestBody"] = request_body
+        else:
+            print("{} looks not valid, skip request generation".
+                  format(args.request))
 
     if args.response:
-        with open(args.response) as response:
-            try:
-                resp_body = json.load(response)
-                resp_content = {
-                    "application/json": {
-                        "schema": _gen_schema(resp_body)
-                    }
+        response_load = _load_file(args.response)
+        if response_load:
+            response_content = {
+                "application/json": {
+                    "schema": _gen_schema(response_load)
                 }
-                path[args.path][args.method.lower()]["responses"][
-                    args.resp_code]["content"] = resp_content
-            except JSONDecodeError:
-                print("{} looks not valid, skip response generation".
-                      format(args.response))
+            }
+            path[args.path][args.method.lower()]["responses"][
+                args.resp_code]["content"] = response_content
+        else:
+            print("{} looks not valid, skip response generation".
+                  format(args.response))
 
     oapi = {
         "openapi": "3.0.0",
