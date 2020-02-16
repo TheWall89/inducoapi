@@ -173,9 +173,8 @@ def main():
 
     try:
         OpenAPI(oapi)
-        print("OpenAPI looks valid\n")
     except SpecError as e:
-        print("Validation error! {}".format(e.message))
+        print("OpenApi validation error! {}".format(e.message))
         return
 
     if args.output:
