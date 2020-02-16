@@ -105,8 +105,9 @@ def _load_file(file: str) -> Optional[Dict]:
         try:
             return json.load(f)
         except JSONDecodeError:
+            f.seek(0)
             try:
-                return yaml.load(f)
+                return yaml.safe_load(f)
             except yaml.YAMLError:
                 return None
 
@@ -147,7 +148,7 @@ def main():
                 }
             }
         else:
-            print("{} looks not valid, skip request generation".
+            print("warning: {} looks not valid, skip request generation".
                   format(args.request))
     else:
         del oapi["paths"][args.path][args.method.lower()]["requestBody"]
@@ -162,12 +163,12 @@ def main():
                 }
             }
         else:
-            print("{} looks not valid, skip response generation".
+            print("warning: {} looks not valid, skip response generation".
                   format(args.response))
 
     try:
         OpenAPI(oapi)
-        print("OpenAPI looks valid.")
+        print("\nOpenAPI looks valid\n")
     except SpecError as e:
         print("Validation error! {}".format(e.message))
         return
