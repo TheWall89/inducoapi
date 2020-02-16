@@ -82,7 +82,7 @@ def _get_parser():
     parser.add_argument("method", type=str,
                         choices=["GET", "POST", "PUT", "PATCH", "DELETE"],
                         help="HTTP request method", metavar="METHOD")
-    parser.add_argument("path", type=str, help="URI resource path",
+    parser.add_argument("path", type=str, help="URI path",
                         metavar="PATH")
     parser.add_argument("resp_code", type=int, help="HTTP response code",
                         metavar="CODE")
