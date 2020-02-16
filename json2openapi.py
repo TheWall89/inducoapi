@@ -79,11 +79,12 @@ class NoAliasDumper(yaml.Dumper):
 def _get_parser():
     descr = "Simple script to generate OpenAPI block from JSON request/response"
     parser = argparse.ArgumentParser("json2openapi.py", description=descr)
-    parser.add_argument("req_m", type=str,
+    parser.add_argument("method", type=str,
                         choices=["GET", "POST", "PUT", "PATCH", "DELETE"],
-                        help="HTTP request method")
-    parser.add_argument("path", type=str, help="REST resource path")
-    parser.add_argument("resp_code", type=int, help="Response code")
+                        help="HTTP request method", metavar="METHOD")
+    parser.add_argument("path", type=str, help="URI resource path", metavar="PATH")
+    parser.add_argument("resp_code", type=int, help="HTTP response code",
+                        metavar="CODE")
     parser.add_argument("--req-json", "-reqj", type=str,
                         help="Path to JSON file containing request body")
     parser.add_argument("--resp-json", "-respj", type=str,
@@ -102,7 +103,7 @@ def main():
 
     path = {
         args.path: {
-            args.req_m.lower(): {
+            args.method.lower(): {
                 "requestBody": {},
                 "responses": {
                     args.resp_code: {
@@ -118,7 +119,7 @@ def main():
         with open(args.req_json) as req_json:
             try:
                 req_body = json.load(req_json)
-                path[args.path][args.req_m.lower()]["requestBody"] = {
+                path[args.path][args.method.lower()]["requestBody"] = {
                     "content": {
                         "application/json": {
                             "schema": _gen_schema(req_body)
@@ -138,7 +139,7 @@ def main():
                         "schema": _gen_schema(resp_body)
                     }
                 }
-                path[args.path][args.req_m.lower()]["responses"][
+                path[args.path][args.method.lower()]["responses"][
                     args.resp_code]["content"] = resp_content
             except JSONDecodeError:
                 print("JSON in {} looks not valid, skip response generation".
