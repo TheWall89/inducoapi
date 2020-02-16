@@ -94,6 +94,9 @@ def _get_parser():
     parser.add_argument("--no-example", "-ne", dest="example", default=True,
                         action="store_false",
                         help="Do not generate schema examples")
+    parser.add_argument("--media-type", "-mt", type=str,
+                        default="application/json",
+                        help="Desired media type to be used.")
     return parser
 
 
@@ -138,7 +141,7 @@ def main():
         if request_load:
             oapi["paths"][args.path][args.method.lower()]["requestBody"] = {
                 "content": {
-                    "application/json": {
+                    args.media_type: {
                         "schema": _gen_schema(request_load)
                     }
                 }
@@ -154,7 +157,7 @@ def main():
         if response_load:
             oapi["paths"][args.path][args.method.lower()]["responses"][
                 args.resp_code]["content"] = {
-                "application/json": {
+                args.media_type: {
                     "schema": _gen_schema(response_load)
                 }
             }
