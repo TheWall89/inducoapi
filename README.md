@@ -153,9 +153,9 @@ If you want to directly write the generated OpenApi spec in a YAML file, just ad
 
 ## TODO list
 
-- [ ] Add support for request/response files in YAML
-- [ ] Add support for `application/yaml` content
-- [ ] Add an integrated HTTP client to get responses from the service
+- [x] Add support for request/response files in YAML
+- [x] Add support for `application/yaml` content
 - [ ] Add support for `headers`
 - [ ] Add support for `links`
 - [ ] Add support for `format`
+- [ ] Add an integrated HTTP client to get responses from the service
