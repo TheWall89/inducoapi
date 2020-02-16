@@ -1,0 +1,12 @@
+---
+
+- id: 1
+  name: Dwight Schrute
+  role: salesman
+- id: 2
+  name: Jim Halpert
+  role: salesman
+- id: 3
+  name: Pam Beesly
+  role: secretary
+
