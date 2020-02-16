@@ -26,6 +26,11 @@ from openapi3.errors import SpecError
 _example = False
 
 
+class NoAliasDumper(yaml.Dumper):
+    def ignore_aliases(self, data):
+        return True
+
+
 def _get_type_ex(val: Any) -> Tuple[str, Any]:
     ex = val
     if val is None:
@@ -71,9 +76,16 @@ def _gen_schema(data: Union[Dict, List]) -> Dict:
     return schema
 
 
-class NoAliasDumper(yaml.Dumper):
-    def ignore_aliases(self, data):
-        return True
+def _load_file(file: str) -> Optional[Dict]:
+    with open(file) as f:
+        try:
+            return json.load(f)
+        except JSONDecodeError:
+            f.seek(0)
+            try:
+                return yaml.safe_load(f)
+            except yaml.YAMLError:
+                return None
 
 
 def _get_parser():
@@ -103,18 +115,6 @@ def _get_parser():
                         default="application/json", metavar="STR",
                         help="Desired media type to be used")
     return parser
-
-
-def _load_file(file: str) -> Optional[Dict]:
-    with open(file) as f:
-        try:
-            return json.load(f)
-        except JSONDecodeError:
-            f.seek(0)
-            try:
-                return yaml.safe_load(f)
-            except yaml.YAMLError:
-                return None
 
 
 def main():
