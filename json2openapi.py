@@ -42,7 +42,7 @@ def _get_type_ex(val: Any) -> Tuple[str, Any]:
         t = "boolean"
     else:
         t = ""
-        print("unknown type: {}, value: {}".format(type(val), val))
+        print("Unknown type: {}, value: {}".format(type(val), val))
 
     global _example
     if _example:
@@ -153,7 +153,7 @@ def main():
                 }
             }
         else:
-            print("warning: {} looks not valid, skip request generation".
+            print("Warning: {} looks not valid, skip request generation".
                   format(args.request))
     else:
         del oapi["paths"][args.path][args.method.lower()]["requestBody"]
@@ -168,12 +168,12 @@ def main():
                 }
             }
         else:
-            print("warning: {} looks not valid, skip response generation".
+            print("Warning: {} looks not valid, skip response generation".
                   format(args.response))
 
     try:
         OpenAPI(oapi)
-        print("\nOpenAPI looks valid\n")
+        print("OpenAPI looks valid\n")
     except SpecError as e:
         print("Validation error! {}".format(e.message))
         return
