@@ -118,11 +118,8 @@ def _get_parser():
     return p
 
 
-def main():
-    args = _get_parser().parse_args()
-    global _example
-    _example = args.example
-
+def build_openapi(method: str, path: str, resp_code: int, request: str = None,
+    response: str = None, media_type: str = "application/json") -> Dict:
     oapi = {
         "openapi": "3.0.0",
         "info": {
@@ -130,11 +127,11 @@ def main():
             "version": "v1",
         },
         "paths": {
-            args.path: {
-                args.method.lower(): {
+            path: {
+                method.lower(): {
                     "requestBody": None,
                     "responses": {
-                        args.resp_code: {
+                        resp_code: {
                             "description": "",
                         }
                     }
@@ -142,35 +139,43 @@ def main():
             }
         }
     }
-
-    if args.request:
-        request_load = _load_file(args.request)
+    if request:
+        request_load = _load_file(request)
         if request_load:
-            oapi["paths"][args.path][args.method.lower()]["requestBody"] = {
+            oapi["paths"][path][method.lower()]["requestBody"] = {
                 "content": {
-                    args.media_type: {
+                    media_type: {
                         "schema": _gen_schema(request_load)
                     }
                 }
             }
         else:
             print("Warning: {} looks not valid, skip request generation".
-                  format(args.request))
+                  format(request))
     else:
-        del oapi["paths"][args.path][args.method.lower()]["requestBody"]
+        del oapi["paths"][path][method.lower()]["requestBody"]
 
-    if args.response:
-        response_load = _load_file(args.response)
+    if response:
+        response_load = _load_file(response)
         if response_load:
-            oapi["paths"][args.path][args.method.lower()]["responses"][
-                args.resp_code]["content"] = {
-                args.media_type: {
+            oapi["paths"][path][method.lower()]["responses"][
+                resp_code]["content"] = {
+                media_type: {
                     "schema": _gen_schema(response_load)
                 }
             }
         else:
             print("Warning: {} looks not valid, skip response generation".
-                  format(args.response))
+                  format(response))
+    return oapi
+
+
+def main():
+    args = _get_parser().parse_args()
+    global _example
+    _example = args.example
+
+    oapi = build_openapi(args.method, args.path, args.resp_code)
 
     try:
         OpenAPI(oapi)
