@@ -175,7 +175,9 @@ def main():
     global _example
     _example = args.example
 
-    oapi = build_openapi(args.method, args.path, args.resp_code)
+    oapi = build_openapi(args.method, args.path, args.resp_code,
+                         request=args.request, response=args.response,
+                         media_type=args.media_type)
 
     try:
         OpenAPI(oapi)
