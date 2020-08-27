@@ -23,7 +23,7 @@ import yaml
 from openapi3 import OpenAPI
 from openapi3.errors import SpecError
 
-_example = False
+_example = True
 
 
 class NoAliasDumper(yaml.Dumper):
