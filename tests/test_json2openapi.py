@@ -27,6 +27,15 @@ def test_get_employees_200_response_yaml():
     assert yaml.safe_load(f.read()) == oapi
 
 
+def test_get_employees_200_response_mediatype():
+  oapi = build_openapi('GET', '/employees', 200,
+                       response='examples/employees.json',
+                       media_type='application/yaml')
+  OpenAPI(oapi)
+  with open('tests/test_get_employees_200_response_mediatype.yaml') as f:
+    assert yaml.safe_load(f.read()) == oapi
+
+
 def test_post_employees_201_request_response():
   oapi = build_openapi('POST', '/employees', 201,
                        request='examples/new_employee_req.json',
