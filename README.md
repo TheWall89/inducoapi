@@ -1,4 +1,4 @@
-![pytest](https://github.com/TheWall89/json2openapi/workflows/pytest/badge.svg?branch=master&event=push)
+![pytest](https://github.com/TheWall89/json2openapi/workflows/pytest/badge.svg?branch=master)
 
 # json2openapi
 
