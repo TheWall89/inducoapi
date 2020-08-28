@@ -4,16 +4,16 @@ A simple python program to generate OpenApi documentation by supplying request/r
 
 ## Motivation
 
-Sometimes you have a fully functioning HTTP service without documentation.
-At some point in time, others may need to use your service and they ask you to provide the OpenApi specification.
-Writing the documentation by hand is a pain and can feel like an overwhelming job for complex services.
+Sometimes you have a fully functioning HTTP service without OpenAPI specification.
+At some point in time, others may need to use your service.
+Writing the specification by hand is a pain and can feel like an overwhelming job for complex services.
 _json2openapi_ helps you generate your OpenApi specification by taking as input request/response examples plus some
 other information.
 
 The generated OpenApi specification is validated with [openapi3](https://github.com/Dorthu/openapi3).
 
 _Warning_: This program also generates the `example` fields in OpenApi schemas by default.
-If you have sensible data in your request/response files, disable this feature with `--no-example`
+If you have sensible data in your request/response files, disable this feature with `--no-example`.
 
 ## Installation
 
