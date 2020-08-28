@@ -23,15 +23,13 @@ import yaml
 from openapi3 import OpenAPI
 from openapi3.errors import SpecError
 
-_example = False
-
 
 class NoAliasDumper(yaml.Dumper):
     def ignore_aliases(self, data):
         return True
 
 
-def _get_type_ex(val: Any) -> Tuple[str, Any]:
+def _get_type_ex(val: Any, example: bool = True) -> Tuple[str, Any]:
     ex = val
     if val is None:
         # If no value is provided, assume string
@@ -49,30 +47,29 @@ def _get_type_ex(val: Any) -> Tuple[str, Any]:
         t = ""
         print("Unknown type: {}, value: {}".format(type(val), val))
 
-    global _example
-    if _example:
+    if example:
         return {"type": t, "example": ex}
     else:
         return {"type": t}
 
 
-def _gen_schema(data: Union[Dict, List]) -> Dict:
+def _gen_schema(data: Union[Dict, List], example: bool = True) -> Dict:
     if isinstance(data, dict):
         schema = {
             "type": "object",
             "properties": {}
         }
         for key, val in data.items():
-            schema["properties"][key] = _gen_schema(val)
+            schema["properties"][key] = _gen_schema(val, example)
     elif isinstance(data, list):
         schema = {
             "type": "array",
             "items": {}
         }
         if data:
-            schema["items"] = _gen_schema(data[0])
+            schema["items"] = _gen_schema(data[0], example)
     else:
-        schema = _get_type_ex(data)
+        schema = _get_type_ex(data, example)
     return schema
 
 
@@ -118,11 +115,9 @@ def _get_parser():
     return p
 
 
-def main():
-    args = _get_parser().parse_args()
-    global _example
-    _example = args.example
-
+def build_openapi(method: str, path: str, resp_code: int, request: str = None,
+    response: str = None, media_type: str = "application/json",
+    example: bool = True) -> Dict:
     oapi = {
         "openapi": "3.0.0",
         "info": {
@@ -130,11 +125,11 @@ def main():
             "version": "v1",
         },
         "paths": {
-            args.path: {
-                args.method.lower(): {
+            path: {
+                method.lower(): {
                     "requestBody": None,
                     "responses": {
-                        args.resp_code: {
+                        resp_code: {
                             "description": "",
                         }
                     }
@@ -142,35 +137,43 @@ def main():
             }
         }
     }
-
-    if args.request:
-        request_load = _load_file(args.request)
+    if request:
+        request_load = _load_file(request)
         if request_load:
-            oapi["paths"][args.path][args.method.lower()]["requestBody"] = {
+            oapi["paths"][path][method.lower()]["requestBody"] = {
                 "content": {
-                    args.media_type: {
-                        "schema": _gen_schema(request_load)
+                    media_type: {
+                        "schema": _gen_schema(request_load, example)
                     }
                 }
             }
         else:
             print("Warning: {} looks not valid, skip request generation".
-                  format(args.request))
+                  format(request))
     else:
-        del oapi["paths"][args.path][args.method.lower()]["requestBody"]
+        del oapi["paths"][path][method.lower()]["requestBody"]
 
-    if args.response:
-        response_load = _load_file(args.response)
+    if response:
+        response_load = _load_file(response)
         if response_load:
-            oapi["paths"][args.path][args.method.lower()]["responses"][
-                args.resp_code]["content"] = {
-                args.media_type: {
-                    "schema": _gen_schema(response_load)
+            oapi["paths"][path][method.lower()]["responses"][
+                resp_code]["content"] = {
+                media_type: {
+                    "schema": _gen_schema(response_load, example)
                 }
             }
         else:
             print("Warning: {} looks not valid, skip response generation".
-                  format(args.response))
+                  format(response))
+    return oapi
+
+
+def main():
+    args = _get_parser().parse_args()
+
+    oapi = build_openapi(args.method, args.path, args.resp_code,
+                         request=args.request, response=args.response,
+                         media_type=args.media_type, example=args.example)
 
     try:
         OpenAPI(oapi)

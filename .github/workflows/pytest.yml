@@ -1,6 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 
-name: CI
+name: pytest
 
 # Controls when the action will run. Triggers the workflow on push or pull request
 # events but only for the master branch
@@ -21,7 +21,7 @@ jobs:
       # For example, pypy2 and pypy3
       matrix:
         python-version: [3.6, 3.7, 3.8]
-        poetry-version: [1.0, 1.0.10]
+        poetry-version: [1.0.10]
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -37,10 +37,9 @@ jobs:
         uses: abatilo/actions-poetry@v2.0.0
         with:
           poetry-version: ${{ matrix.poetry-version }}
-      
+
       - name: Install dependencies
-        run: poetry install
-      
+        run: poetry install --no-root
+
       - name: Test with pytest
-        run: |
-          pytest
+        run: poetry run pytest
