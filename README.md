@@ -1,3 +1,5 @@
+![pytest](https://github.com/TheWall89/json2openapi/workflows/pytest/badge.svg?branch=master&event=push)
+
 # json2openapi
 
 A simple python program to generate OpenApi documentation by supplying request/response bodies.
@@ -17,29 +19,32 @@ If you have sensible data in your request/response files, disable this feature w
 
 ## Installation
 
-Pipenv is used for dependencies. Create a virtual environment with:
+We use [poetry](https://python-poetry.org/) for dependency management.
 
 ```shell script
 # clone repository
-$ cd json2openapi
-$ pipenv install 
+cd json2openapi
+poetry install --no-root
 ```
 
 ## Usage
 
+### From python
+
+[test_json2openapi.py](tests/test_json2openapi.py) provides usage examples of the module from python.
+
+### From CLI
 `json2openapi.py` provides its own help. Check it out with:
 
 ```shell script
-$ pipenv run ./json2openapi.py --help
+poetry run json2openapi/json2openapi.py --help
 ```
-
-## Example
 
 Let's consider a simple case: you have an HTTP service managing employees.
 We want to generate OpenApi spec for a GET on all the employees, returning a 200 status code:
 
 ```shell script
-$ pipenv run ./json2openapi.py GET /employees 200
+poetry run json2openapi/json2openapi.py GET /employees 200
 ```
 
 <details><summary>output</summary>
@@ -61,10 +66,10 @@ paths:
 
 Now, a GET request with an empty response is not quite useful.
 Let's add an argument with a JSON file containing a response example.
-Input examples can be found in [examples](./examples).
+Input examples can be found in [examples](examples).
 
 ```shell script
-$ pipenv run ./json2openapi.py GET /employees 200 --response ./examples/employees.json
+poetry run json2openapi/json2openapi.py GET /employees 200 --response examples/employees.json
 ```
 
 <details><summary>output</summary>
@@ -103,7 +108,7 @@ paths:
 Finally, let's try a POST request with both request and response.
 
 ```shell script
-$ pipenv run ./json2openapi.py POST /employees 201 --request ./examples/new_employee_req.json --response ./examples/new_employee_resp.json
+poetry run json2openapi/json2openapi.py POST /employees 201 --request examples/new_employee_req.json --response examples/new_employee_resp.json
 ```
 
 <details><summary>output</summary>
@@ -149,12 +154,13 @@ paths:
 
 </details>
 
-If you want to directly write the generated OpenApi spec in a YAML file, just add `--output ./openapi.yaml`
+If you want to directly write the generated OpenApi spec in a YAML file, just add `--output openapi.yaml`
 
 ## TODO list
 
 - [x] Add support for request/response files in YAML
 - [x] Add support for `application/yaml` content
+- [ ] Package module
 - [ ] Add support for `headers`
 - [ ] Add support for `links`
 - [ ] Add support for `format`
