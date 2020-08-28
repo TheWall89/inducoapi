@@ -23,15 +23,13 @@ import yaml
 from openapi3 import OpenAPI
 from openapi3.errors import SpecError
 
-_example = True
-
 
 class NoAliasDumper(yaml.Dumper):
     def ignore_aliases(self, data):
         return True
 
 
-def _get_type_ex(val: Any) -> Tuple[str, Any]:
+def _get_type_ex(val: Any, example: bool = True) -> Tuple[str, Any]:
     ex = val
     if val is None:
         # If no value is provided, assume string
@@ -49,30 +47,29 @@ def _get_type_ex(val: Any) -> Tuple[str, Any]:
         t = ""
         print("Unknown type: {}, value: {}".format(type(val), val))
 
-    global _example
-    if _example:
+    if example:
         return {"type": t, "example": ex}
     else:
         return {"type": t}
 
 
-def _gen_schema(data: Union[Dict, List]) -> Dict:
+def _gen_schema(data: Union[Dict, List], example: bool = True) -> Dict:
     if isinstance(data, dict):
         schema = {
             "type": "object",
             "properties": {}
         }
         for key, val in data.items():
-            schema["properties"][key] = _gen_schema(val)
+            schema["properties"][key] = _gen_schema(val, example)
     elif isinstance(data, list):
         schema = {
             "type": "array",
             "items": {}
         }
         if data:
-            schema["items"] = _gen_schema(data[0])
+            schema["items"] = _gen_schema(data[0], example)
     else:
-        schema = _get_type_ex(data)
+        schema = _get_type_ex(data, example)
     return schema
 
 
@@ -119,7 +116,8 @@ def _get_parser():
 
 
 def build_openapi(method: str, path: str, resp_code: int, request: str = None,
-    response: str = None, media_type: str = "application/json") -> Dict:
+    response: str = None, media_type: str = "application/json",
+    example: bool = True) -> Dict:
     oapi = {
         "openapi": "3.0.0",
         "info": {
@@ -145,7 +143,7 @@ def build_openapi(method: str, path: str, resp_code: int, request: str = None,
             oapi["paths"][path][method.lower()]["requestBody"] = {
                 "content": {
                     media_type: {
-                        "schema": _gen_schema(request_load)
+                        "schema": _gen_schema(request_load, example)
                     }
                 }
             }
@@ -161,7 +159,7 @@ def build_openapi(method: str, path: str, resp_code: int, request: str = None,
             oapi["paths"][path][method.lower()]["responses"][
                 resp_code]["content"] = {
                 media_type: {
-                    "schema": _gen_schema(response_load)
+                    "schema": _gen_schema(response_load, example)
                 }
             }
         else:
@@ -172,12 +170,10 @@ def build_openapi(method: str, path: str, resp_code: int, request: str = None,
 
 def main():
     args = _get_parser().parse_args()
-    global _example
-    _example = args.example
 
     oapi = build_openapi(args.method, args.path, args.resp_code,
                          request=args.request, response=args.response,
-                         media_type=args.media_type)
+                         media_type=args.media_type, example=args.example)
 
     try:
         OpenAPI(oapi)
