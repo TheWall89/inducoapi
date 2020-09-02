@@ -90,7 +90,7 @@ def _get_parser():
             "supplying request/response bodies"
     fmt = argparse.ArgumentDefaultsHelpFormatter
     usage = "%(prog)s METHOD PATH CODE [options]"
-    p = argparse.ArgumentParser("json2openapi.py", description=descr,
+    p = argparse.ArgumentParser("inducoapi.py", description=descr,
                                 usage=usage, formatter_class=fmt)
     p.add_argument("method", type=str,
                    choices=["GET", "POST", "PUT", "PATCH", "DELETE"],
