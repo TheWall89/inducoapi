@@ -2,17 +2,17 @@
 
 # InducOapi
 
-A simple python program to generate OpenApi documentation by supplying request/response bodies.
+A simple python program to generate OpenApi Description Documents by supplying request/response bodies.
 
 ## Motivation
 
-Sometimes you have a fully functioning HTTP service without OpenAPI specification.
+Sometimes you have a fully functioning HTTP service without OpenAPI documentation.
 At some point in time, others may need to use your service.
-Writing the specification by hand is a pain and can feel like an overwhelming job for complex services.
-_inducoapi_ helps you generate your OpenApi specification by taking as input request/response examples plus some
+Writing the documentation by hand is a pain and can feel like an overwhelming job for complex services.
+_inducoapi_ helps you generate your OpenApi Description Documents by taking as input request/response examples plus some
 other information.
 
-The generated OpenApi specification is validated with [openapi3](https://github.com/Dorthu/openapi3).
+The generated OpenApi documentation is validated with [openapi3](https://github.com/Dorthu/openapi3).
 
 _Warning_: This program also generates the `example` fields in OpenApi schemas by default.
 If you have sensible data in your request/response files, disable this feature with `--no-example`.
@@ -161,6 +161,7 @@ If you want to directly write the generated OpenApi spec in a YAML file, just ad
 - [x] Add support for request/response files in YAML
 - [x] Add support for `application/yaml` content
 - [ ] Package module
+- [ ] Use resource definitions
 - [ ] Add support for `headers`
 - [ ] Add support for `links`
 - [ ] Add support for `format`
