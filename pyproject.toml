@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "json2openapi"
+name = "inducoapi"
 version = "0.1.0"
 description = "A simple python program to generate OpenApi documentation by supplying request/response bodies."
 authors = ["Matteo Pergolesi <matpergo@gmail.com>"]

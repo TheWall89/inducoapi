@@ -1,7 +1,7 @@
 import yaml
 from openapi3 import OpenAPI
 
-from json2openapi.json2openapi import build_openapi
+from inducoapi.inducoapi import build_openapi
 
 
 def test_get_employees_200():
