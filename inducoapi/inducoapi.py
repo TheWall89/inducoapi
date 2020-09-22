@@ -14,19 +14,11 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-import argparse
 import json
 from json import JSONDecodeError
 from typing import Dict, Tuple, Any, Union, List, Optional
 
 import yaml
-from openapi3 import OpenAPI
-from openapi3.errors import SpecError
-
-
-class NoAliasDumper(yaml.Dumper):
-    def ignore_aliases(self, data):
-        return True
 
 
 def _get_type_ex(val: Any, example: bool = True) -> Tuple[str, Any]:
@@ -85,39 +77,9 @@ def _load_file(file: str) -> Optional[Dict]:
                 return None
 
 
-def _get_parser():
-    descr = "A simple python program to generate OpenApi documentation by " \
-            "supplying request/response bodies"
-    fmt = argparse.ArgumentDefaultsHelpFormatter
-    usage = "%(prog)s METHOD PATH CODE [options]"
-    p = argparse.ArgumentParser("inducoapi.py", description=descr,
-                                usage=usage, formatter_class=fmt)
-    p.add_argument("method", type=str,
-                   choices=["GET", "POST", "PUT", "PATCH", "DELETE"],
-                   metavar="METHOD",
-                   help="HTTP request method")
-    p.add_argument("path", type=str, metavar="PATH",
-                   help="URI path")
-    p.add_argument("resp_code", type=int, metavar="CODE",
-                   help="HTTP response code")
-    p.add_argument("--request", type=str, metavar="PATH",
-                   help="Path to file containing request body")
-    p.add_argument("--response", type=str, metavar="PATH",
-                   help="Path to file containing response body")
-    p.add_argument("--output", type=str, metavar="PATH",
-                   help="Path to output file")
-    p.add_argument("--no-example", "-ne", dest="example", default=True,
-                   action="store_false",
-                   help="Do not generate schema examples")
-    p.add_argument("--media-type", type=str, default="application/json",
-                   metavar="STR",
-                   help="Desired media type to be used")
-    return p
-
-
 def build_openapi(method: str, path: str, resp_code: int, request: str = None,
-    response: str = None, media_type: str = "application/json",
-    example: bool = True) -> Dict:
+                  response: str = None, media_type: str = "application/json",
+                  example: bool = True) -> Dict:
     oapi = {
         "openapi": "3.0.0",
         "info": {
@@ -166,28 +128,3 @@ def build_openapi(method: str, path: str, resp_code: int, request: str = None,
             print("Warning: {} looks not valid, skip response generation".
                   format(response))
     return oapi
-
-
-def main():
-    args = _get_parser().parse_args()
-
-    oapi = build_openapi(args.method, args.path, args.resp_code,
-                         request=args.request, response=args.response,
-                         media_type=args.media_type, example=args.example)
-
-    try:
-        OpenAPI(oapi)
-    except SpecError as e:
-        print("OpenApi validation error! {}".format(e.message))
-        return
-
-    if args.output:
-        with open(args.output, "w") as o:
-            yaml.dump(oapi, o, indent=2, Dumper=NoAliasDumper, sort_keys=False)
-        print("Output written to {}".format(args.output))
-    else:
-        print(yaml.dump(oapi, indent=2, Dumper=NoAliasDumper, sort_keys=False))
-
-
-if __name__ == '__main__':
-    main()
