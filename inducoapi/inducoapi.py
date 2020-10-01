@@ -111,16 +111,16 @@ def _get_parser():
                    help="URI path")
     p.add_argument("resp_code", type=int, metavar="CODE",
                    help="HTTP response code")
-    p.add_argument("--request", type=str, metavar="PATH",
+    p.add_argument("-req", "--request", type=str, metavar="PATH",
                    help="Path to file containing request body")
-    p.add_argument("--response", type=str, metavar="PATH",
+    p.add_argument("-resp", "--response", type=str, metavar="PATH",
                    help="Path to file containing response body")
-    p.add_argument("--output", type=str, metavar="PATH",
+    p.add_argument("-o", "--output", type=str, metavar="PATH",
                    help="Path to output file")
-    p.add_argument("--media-type", type=str, metavar="STR",
+    p.add_argument("-mt", "--media-type", type=str, metavar="STR",
                    default=default_mediatype,
                    help="Desired media type to be used")
-    p.add_argument("--no-example", "-ne", action="store_false", dest="example",
+    p.add_argument("-ne", "--no-example", action="store_false", dest="example",
                    default=default_example,
                    help="Do not generate schema examples")
     return p
