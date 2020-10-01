@@ -13,7 +13,6 @@
 #  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
-
 import argparse
 import json
 from json import JSONDecodeError
@@ -21,10 +20,9 @@ from typing import Dict, Tuple, Any, Union, List, Optional
 
 import yaml
 from openapi3 import OpenAPI
-from openapi3.errors import SpecError
 
 
-class NoAliasDumper(yaml.Dumper):
+class _NoAliasDumper(yaml.Dumper):
     def ignore_aliases(self, data):
         return True
 
@@ -85,6 +83,16 @@ def _load_file(file: str) -> Optional[Dict]:
                 return None
 
 
+def _write_output(oapi: Dict, output: str) -> None:
+    dump_kwds = {"indent": 2, "Dumper": _NoAliasDumper, "sort_keys": False}
+    if output:
+        with open(output, "w") as o:
+            yaml.dump(oapi, o, **dump_kwds)
+            print("Output written to {}".format(output))
+    else:
+        print(yaml.dump(oapi, **dump_kwds))
+
+
 def _get_parser():
     descr = "A simple python program to generate OpenApi documentation by " \
             "supplying request/response bodies"
@@ -116,8 +124,8 @@ def _get_parser():
 
 
 def build_openapi(method: str, path: str, resp_code: int, request: str = None,
-    response: str = None, media_type: str = "application/json",
-    example: bool = True) -> Dict:
+                  response: str = None, media_type: str = "application/json",
+                  example: bool = True) -> Dict:
     oapi = {
         "openapi": "3.0.0",
         "info": {
@@ -137,6 +145,7 @@ def build_openapi(method: str, path: str, resp_code: int, request: str = None,
             }
         }
     }
+
     if request:
         request_load = _load_file(request)
         if request_load:
@@ -165,29 +174,8 @@ def build_openapi(method: str, path: str, resp_code: int, request: str = None,
         else:
             print("Warning: {} looks not valid, skip response generation".
                   format(response))
+
+    # Validate
+    OpenAPI(oapi)
+
     return oapi
-
-
-def main():
-    args = _get_parser().parse_args()
-
-    oapi = build_openapi(args.method, args.path, args.resp_code,
-                         request=args.request, response=args.response,
-                         media_type=args.media_type, example=args.example)
-
-    try:
-        OpenAPI(oapi)
-    except SpecError as e:
-        print("OpenApi validation error! {}".format(e.message))
-        return
-
-    if args.output:
-        with open(args.output, "w") as o:
-            yaml.dump(oapi, o, indent=2, Dumper=NoAliasDumper, sort_keys=False)
-        print("Output written to {}".format(args.output))
-    else:
-        print(yaml.dump(oapi, indent=2, Dumper=NoAliasDumper, sort_keys=False))
-
-
-if __name__ == '__main__':
-    main()
