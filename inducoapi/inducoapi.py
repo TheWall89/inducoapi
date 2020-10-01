@@ -13,7 +13,7 @@
 #  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
-
+import argparse
 import json
 from json import JSONDecodeError
 from typing import Dict, Tuple, Any, Union, List, Optional
@@ -90,6 +90,36 @@ def _write_output(oapi: Dict, output: str) -> None:
             print("Output written to {}".format(output))
     else:
         print(yaml.dump(oapi, **dump_kwds))
+
+
+def _get_parser():
+    descr = "A simple python program to generate OpenApi documentation by " \
+            "supplying request/response bodies"
+    fmt = argparse.ArgumentDefaultsHelpFormatter
+    usage = "%(prog)s METHOD PATH CODE [options]"
+    p = argparse.ArgumentParser("inducoapi.py", description=descr,
+                                usage=usage, formatter_class=fmt)
+    p.add_argument("method", type=str,
+                   choices=["GET", "POST", "PUT", "PATCH", "DELETE"],
+                   metavar="METHOD",
+                   help="HTTP request method")
+    p.add_argument("path", type=str, metavar="PATH",
+                   help="URI path")
+    p.add_argument("resp_code", type=int, metavar="CODE",
+                   help="HTTP response code")
+    p.add_argument("--request", type=str, metavar="PATH",
+                   help="Path to file containing request body")
+    p.add_argument("--response", type=str, metavar="PATH",
+                   help="Path to file containing response body")
+    p.add_argument("--output", type=str, metavar="PATH",
+                   help="Path to output file")
+    p.add_argument("--no-example", "-ne", dest="example", default=True,
+                   action="store_false",
+                   help="Do not generate schema examples")
+    p.add_argument("--media-type", type=str, default="application/json",
+                   metavar="STR",
+                   help="Desired media type to be used")
+    return p
 
 
 def build_openapi(method: str, path: str, resp_code: int, request: str = None,
