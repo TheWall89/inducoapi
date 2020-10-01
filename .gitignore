@@ -113,6 +113,4 @@ venv.bak/
 # vscode
 .vscode/
 
-adaptation_layer/tests/node_modules/
-
 *.db
