@@ -46,7 +46,7 @@ def _get_type_ex(val: Any, example: bool = True) -> Tuple[str, Any]:
         t = "boolean"
     else:
         t = ""
-        print("Unknown type: {}, value: {}".format(type(val), val))
+        print(f"Unknown type: {type(val)}, value: {val}")
 
     if example:
         return {"type": t, "example": ex}
@@ -91,7 +91,7 @@ def _write_output(oapi: Dict, output: str) -> None:
     if output:
         with open(output, "w") as o:
             yaml.dump(oapi, o, **dump_kwds)
-            print("Output written to {}".format(output))
+            print(f"Output written to {output}")
     else:
         print(yaml.dump(oapi, **dump_kwds))
 
@@ -160,8 +160,7 @@ def build_openapi(method: str, path: str, resp_code: int, request: str = None,
                 }
             }
         else:
-            print("Warning: {} looks not valid, skip request generation".
-                  format(request))
+            print(f"Warning: cannot read {request}, skip request generation")
     else:
         del oapi["paths"][path][method.lower()]["requestBody"]
 
@@ -175,8 +174,7 @@ def build_openapi(method: str, path: str, resp_code: int, request: str = None,
                 }
             }
         else:
-            print("Warning: {} looks not valid, skip response generation".
-                  format(response))
+            print(f"Warning: cannot read {response}, skip response generation")
 
     # Validate
     OpenAPI(oapi)
