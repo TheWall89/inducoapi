@@ -15,9 +15,10 @@
 #  limitations under the License.
 
 import argparse
+
+import yaml
 from openapi3 import OpenAPI
 from openapi3.errors import SpecError
-import yaml
 
 from inducoapi.inducoapi import build_openapi
 
