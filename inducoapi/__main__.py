@@ -15,10 +15,11 @@
 #  limitations under the License.
 
 import argparse
-from .inducoapi import build_openapi
 from openapi3 import OpenAPI
 from openapi3.errors import SpecError
 import yaml
+
+from inducoapi.inducoapi import build_openapi
 
 
 class NoAliasDumper(yaml.Dumper):
