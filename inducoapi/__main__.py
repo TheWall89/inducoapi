@@ -28,10 +28,10 @@ def main():
                              request=args.request, response=args.response,
                              media_type=args.media_type, example=args.example)
     except SpecError as e:
-        sys.exit(f'OpenApi validation error! {e.message}')
+        sys.exit(f"OpenApi validation error! {e.message}")
 
     _write_output(oapi, args.output)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
