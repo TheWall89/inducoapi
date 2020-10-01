@@ -17,7 +17,7 @@
 from openapi3 import OpenAPI
 from openapi3.errors import SpecError
 
-from inducoapi import build_openapi, _write_output, _get_parser
+from .inducoapi import build_openapi, _get_parser, _write_output
 
 
 def main():
