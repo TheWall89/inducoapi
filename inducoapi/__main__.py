@@ -13,8 +13,8 @@
 #  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
+import sys
 
-from openapi3 import OpenAPI
 from openapi3.errors import SpecError
 
 from .inducoapi import build_openapi, _get_parser, _write_output
@@ -23,15 +23,12 @@ from .inducoapi import build_openapi, _get_parser, _write_output
 def main():
     args = _get_parser().parse_args()
 
-    oapi = build_openapi(args.method, args.path, args.resp_code,
-                         request=args.request, response=args.response,
-                         media_type=args.media_type, example=args.example)
-
     try:
-        OpenAPI(oapi)
+        oapi = build_openapi(args.method, args.path, args.resp_code,
+                             request=args.request, response=args.response,
+                             media_type=args.media_type, example=args.example)
     except SpecError as e:
-        print("OpenApi validation error! {}".format(e.message))
-        return
+        sys.exit(f'OpenApi validation error! {e.message}')
 
     _write_output(oapi, args.output)
 

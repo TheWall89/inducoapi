@@ -19,6 +19,7 @@ from json import JSONDecodeError
 from typing import Dict, Tuple, Any, Union, List, Optional
 
 import yaml
+from openapi3 import OpenAPI
 
 
 class _NoAliasDumper(yaml.Dumper):
@@ -144,6 +145,7 @@ def build_openapi(method: str, path: str, resp_code: int, request: str = None,
             }
         }
     }
+
     if request:
         request_load = _load_file(request)
         if request_load:
@@ -172,4 +174,8 @@ def build_openapi(method: str, path: str, resp_code: int, request: str = None,
         else:
             print("Warning: {} looks not valid, skip response generation".
                   format(response))
+
+    # Validate
+    OpenAPI(oapi)
+
     return oapi
