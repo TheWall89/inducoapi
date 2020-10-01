@@ -21,6 +21,11 @@ from typing import Dict, Tuple, Any, Union, List, Optional
 import yaml
 
 
+class _NoAliasDumper(yaml.Dumper):
+    def ignore_aliases(self, data):
+        return True
+
+
 def _get_type_ex(val: Any, example: bool = True) -> Tuple[str, Any]:
     ex = val
     if val is None:
@@ -75,6 +80,16 @@ def _load_file(file: str) -> Optional[Dict]:
                 return yaml.safe_load(f)
             except yaml.YAMLError:
                 return None
+
+
+def _write_output(oapi: Dict, output: str) -> None:
+    dump_kwds = {"indent": 2, "Dumper": _NoAliasDumper, "sort_keys": False}
+    if output:
+        with open(output, "w") as o:
+            yaml.dump(oapi, o, **dump_kwds)
+            print("Output written to {}".format(output))
+    else:
+        print(yaml.dump(oapi, **dump_kwds))
 
 
 def build_openapi(method: str, path: str, resp_code: int, request: str = None,

@@ -16,16 +16,10 @@
 
 import argparse
 
-import yaml
 from openapi3 import OpenAPI
 from openapi3.errors import SpecError
 
-from inducoapi.inducoapi import build_openapi
-
-
-class NoAliasDumper(yaml.Dumper):
-    def ignore_aliases(self, data):
-        return True
+from inducoapi import build_openapi, _write_output
 
 
 def _get_parser():
@@ -71,12 +65,7 @@ def main():
         print("OpenApi validation error! {}".format(e.message))
         return
 
-    if args.output:
-        with open(args.output, "w") as o:
-            yaml.dump(oapi, o, indent=2, Dumper=NoAliasDumper, sort_keys=False)
-        print("Output written to {}".format(args.output))
-    else:
-        print(yaml.dump(oapi, indent=2, Dumper=NoAliasDumper, sort_keys=False))
+    _write_output(oapi, args.output)
 
 
 if __name__ == '__main__':
