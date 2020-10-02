@@ -15,7 +15,6 @@
 #  limitations under the License.
 import argparse
 import sys
-from typing import Dict
 
 import yaml
 from openapi3.errors import SpecError
@@ -26,16 +25,6 @@ from .inducoapi import build_openapi
 class _NoAliasDumper(yaml.Dumper):
     def ignore_aliases(self, data):
         return True
-
-
-def _write_output(oapi: Dict, output: str) -> None:
-    dump_kwds = {"indent": 2, "Dumper": _NoAliasDumper, "sort_keys": False}
-    if output:
-        with open(output, "w") as o:
-            yaml.dump(oapi, o, **dump_kwds)
-            print(f"Output written to {output}")
-    else:
-        print(yaml.dump(oapi, **dump_kwds))
 
 
 def _get_parser():
@@ -77,7 +66,8 @@ def main():
             with open(args.request) as f:
                 request = f.read()
         except OSError as e:
-            sys.exit(f"Error reading request file\n{e}")
+
+            tigtigjasdlfkajsfhsys.exit(f"Error reading request file\n{e}")
 
     response = None
     if args.response:
@@ -96,10 +86,16 @@ def main():
     except ValueError as e:
         sys.exit(f"{e}")
 
-    try:
-        _write_output(oapi, args.output)
-    except OSError as e:
-        print(f"Error writing output file\n{e}")
+    dump_kwds = {"indent": 2, "Dumper": _NoAliasDumper, "sort_keys": False}
+    if args.output:
+        try:
+            with open(args.output, "w") as o:
+                yaml.dump(oapi, o, **dump_kwds)
+                print(f"Output written to {args.output}")
+        except OSError as e:
+            print(f"Error writing output file\n{e}")
+    else:
+        print(yaml.dump(oapi, **dump_kwds))
 
 
 if __name__ == "__main__":
