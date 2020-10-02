@@ -1,3 +1,4 @@
+import pytest
 import yaml
 from inducoapi.inducoapi import build_openapi
 
@@ -52,3 +53,39 @@ def test_post_employees_201_request_response():
                          request=request, response=response)
     with open("tests/test_post_employees_201_request_response.yaml") as f:
         assert yaml.safe_load(f.read()) == oapi
+
+
+def test_post_employees_201_request_invalid_json():
+    with open("tests/invalid.json") as f:
+        request = f.read()
+    with pytest.raises(ValueError) as excinfo:
+        build_openapi("POST", "/employees", 201,
+                      request=request)
+    assert "request" in str(excinfo)
+
+
+def test_post_employees_201_request_invalid_yaml():
+    with open("tests/invalid.yaml") as f:
+        request = f.read()
+    with pytest.raises(ValueError) as excinfo:
+        build_openapi("POST", "/employees", 201,
+                      request=request)
+    assert "request" in str(excinfo)
+
+
+def test_post_employees_201_response_invalid_json():
+    with open("tests/invalid.json") as f:
+        response = f.read()
+    with pytest.raises(ValueError) as excinfo:
+        build_openapi("POST", "/employees", 201,
+                      response=response)
+    assert "response" in str(excinfo)
+
+
+def test_post_employees_201_response_invalid_yaml():
+    with open("tests/invalid.yaml") as f:
+        response = f.read()
+    with pytest.raises(ValueError) as excinfo:
+        build_openapi("POST", "/employees", 201,
+                      response=response)
+    assert "response" in str(excinfo)
