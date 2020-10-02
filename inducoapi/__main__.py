@@ -66,8 +66,7 @@ def main():
             with open(args.request) as f:
                 request = f.read()
         except OSError as e:
-
-            tigtigjasdlfkajsfhsys.exit(f"Error reading request file\n{e}")
+            sys.exit(f"Error reading request file\n{e}")
 
     response = None
     if args.response:
