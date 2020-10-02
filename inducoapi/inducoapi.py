@@ -13,18 +13,9 @@
 #  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
-import argparse
-import json
-from json import JSONDecodeError
-from typing import Dict, Tuple, Any, Union, List, Optional
+from typing import Dict, Tuple, Any, Union, List
 
-import yaml
 from openapi3 import OpenAPI
-
-
-class _NoAliasDumper(yaml.Dumper):
-    def ignore_aliases(self, data):
-        return True
 
 
 def _get_type_ex(val: Any, example: bool = True) -> Tuple[str, Any]:
@@ -71,60 +62,9 @@ def _gen_schema(data: Union[Dict, List], example: bool = True) -> Dict:
     return schema
 
 
-def _load_file(file: str) -> Optional[Dict]:
-    with open(file) as f:
-        try:
-            return json.load(f)
-        except JSONDecodeError:
-            f.seek(0)
-            try:
-                return yaml.safe_load(f)
-            except yaml.YAMLError:
-                return None
-
-
-def _write_output(oapi: Dict, output: str) -> None:
-    dump_kwds = {"indent": 2, "Dumper": _NoAliasDumper, "sort_keys": False}
-    if output:
-        with open(output, "w") as o:
-            yaml.dump(oapi, o, **dump_kwds)
-            print(f"Output written to {output}")
-    else:
-        print(yaml.dump(oapi, **dump_kwds))
-
-
-def _get_parser():
-    descr = "A simple python program to generate OpenApi documentation by " \
-            "supplying request/response bodies"
-    fmt = argparse.ArgumentDefaultsHelpFormatter
-    usage = "%(prog)s METHOD PATH CODE [options]"
-    p = argparse.ArgumentParser("inducoapi.py", description=descr,
-                                usage=usage, formatter_class=fmt)
-    p.add_argument("method", type=str,
-                   choices=["GET", "POST", "PUT", "PATCH", "DELETE"],
-                   metavar="METHOD",
-                   help="HTTP request method")
-    p.add_argument("path", type=str, metavar="PATH",
-                   help="URI path")
-    p.add_argument("resp_code", type=int, metavar="CODE",
-                   help="HTTP response code")
-    p.add_argument("-req", "--request", type=str, metavar="PATH",
-                   help="Path to file containing request body")
-    p.add_argument("-resp", "--response", type=str, metavar="PATH",
-                   help="Path to file containing response body")
-    p.add_argument("-o", "--output", type=str, metavar="PATH",
-                   help="Path to output file")
-    p.add_argument("-mt", "--media-type", type=str, metavar="STR",
-                   default="application/json",
-                   help="Desired media type to be used")
-    p.add_argument("-ne", "--no-example", action="store_false", dest="example",
-                   default=True,
-                   help="Do not generate schema examples")
-    return p
-
-
-def build_openapi(method: str, path: str, resp_code: int, request: str = None,
-                  response: str = None, media_type: str = "application/json",
+def build_openapi(method: str, path: str, resp_code: int,
+                  request: Dict = None, response: Dict = None,
+                  media_type: str = "application/json",
                   example: bool = True) -> Dict:
     oapi = {
         "openapi": "3.0.0",
@@ -147,31 +87,23 @@ def build_openapi(method: str, path: str, resp_code: int, request: str = None,
     }
 
     if request:
-        request_load = _load_file(request)
-        if request_load:
-            oapi["paths"][path][method.lower()]["requestBody"] = {
-                "content": {
-                    media_type: {
-                        "schema": _gen_schema(request_load, example)
-                    }
+        oapi["paths"][path][method.lower()]["requestBody"] = {
+            "content": {
+                media_type: {
+                    "schema": _gen_schema(request, example)
                 }
             }
-        else:
-            print(f"Warning: cannot read {request}, skip request generation")
+        }
     else:
         del oapi["paths"][path][method.lower()]["requestBody"]
 
     if response:
-        response_load = _load_file(response)
-        if response_load:
-            oapi["paths"][path][method.lower()]["responses"][
-                resp_code]["content"] = {
-                media_type: {
-                    "schema": _gen_schema(response_load, example)
-                }
+        oapi["paths"][path][method.lower()]["responses"][
+            resp_code]["content"] = {
+            media_type: {
+                "schema": _gen_schema(response, example)
             }
-        else:
-            print(f"Warning: cannot read {response}, skip response generation")
+        }
 
     # Validate
     OpenAPI(oapi)
