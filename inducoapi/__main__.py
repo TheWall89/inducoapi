@@ -60,21 +60,23 @@ def _get_parser():
 def main():
     args = _get_parser().parse_args()
 
-    request = None
     if args.request:
         try:
             with open(args.request) as f:
                 request = f.read()
         except OSError as e:
             sys.exit(f"Error reading request file\n{e}")
+    else:
+        request = None
 
-    response = None
     if args.response:
         try:
             with open(args.response) as f:
                 response = f.read()
         except OSError as e:
             sys.exit(f"Error reading response file\n{e}")
+    else:
+        response = None
 
     try:
         oapi = build_openapi(args.method, args.path, args.resp_code,
