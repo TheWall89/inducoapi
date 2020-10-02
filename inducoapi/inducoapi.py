@@ -21,9 +21,6 @@ from typing import Dict, Tuple, Any, Union, List, Optional
 import yaml
 from openapi3 import OpenAPI
 
-default_mediatype = "application/json"
-default_example = True
-
 
 class _NoAliasDumper(yaml.Dumper):
     def ignore_aliases(self, data):
@@ -118,17 +115,17 @@ def _get_parser():
     p.add_argument("-o", "--output", type=str, metavar="PATH",
                    help="Path to output file")
     p.add_argument("-mt", "--media-type", type=str, metavar="STR",
-                   default=default_mediatype,
+                   default="application/json",
                    help="Desired media type to be used")
     p.add_argument("-ne", "--no-example", action="store_false", dest="example",
-                   default=default_example,
+                   default=True,
                    help="Do not generate schema examples")
     return p
 
 
 def build_openapi(method: str, path: str, resp_code: int, request: str = None,
-                  response: str = None, media_type: str = default_mediatype,
-                  example: bool = default_example) -> Dict:
+                  response: str = None, media_type: str = "application/json",
+                  example: bool = True) -> Dict:
     oapi = {
         "openapi": "3.0.0",
         "info": {
