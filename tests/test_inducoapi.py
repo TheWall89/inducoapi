@@ -1,5 +1,4 @@
 import yaml
-from inducoapi.__main__ import _load_file
 from inducoapi.inducoapi import build_openapi
 
 
@@ -10,38 +9,46 @@ def test_get_employees_200():
 
 
 def test_get_employees_200_response():
-    oapi = build_openapi("GET", "/employees", 200,
-                         response=_load_file("examples/employees.json"))
+    with open("examples/employees.json") as f:
+        response = f.read()
+    oapi = build_openapi("GET", "/employees", 200, response=response)
     with open("tests/test_get_employees_200_response.yaml") as f:
         assert yaml.safe_load(f.read()) == oapi
 
 
 def test_get_employees_200_response_noexample():
+    with open("examples/employees.json") as f:
+        response = f.read()
     oapi = build_openapi("GET", "/employees", 200,
-                         response=_load_file("examples/employees.json"),
-                         example=False)
+                         response=response, example=False)
     with open("tests/test_get_employees_200_response_noexample.yaml") as f:
         assert yaml.safe_load(f.read()) == oapi
 
 
 def test_get_employees_200_response_yaml():
+    with open("examples/employees.yaml") as f:
+        response = f.read()
     oapi = build_openapi("GET", "/employees", 200,
-                         response=_load_file("examples/employees.yaml"))
+                         response=response)
     with open("tests/test_get_employees_200_response.yaml") as f:
         assert yaml.safe_load(f.read()) == oapi
 
 
 def test_get_employees_200_response_mediatype():
+    with open("examples/employees.json") as f:
+        response = f.read()
     oapi = build_openapi("GET", "/employees", 200,
-                         response=_load_file("examples/employees.json"),
-                         media_type="application/yaml")
+                         response=response, media_type="application/yaml")
     with open("tests/test_get_employees_200_response_mediatype.yaml") as f:
         assert yaml.safe_load(f.read()) == oapi
 
 
 def test_post_employees_201_request_response():
+    with open("examples/new_employee_req.json") as f:
+        request = f.read()
+    with open("examples/new_employee_resp.json") as f:
+        response = f.read()
     oapi = build_openapi("POST", "/employees", 201,
-                         request=_load_file("examples/new_employee_req.json"),
-                         response=_load_file("examples/new_employee_resp.json"))
+                         request=request, response=response)
     with open("tests/test_post_employees_201_request_response.yaml") as f:
         assert yaml.safe_load(f.read()) == oapi

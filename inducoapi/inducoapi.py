@@ -13,8 +13,10 @@
 #  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
+import json
 from typing import Dict, Tuple, Any, Union, List
 
+import yaml
 from openapi3 import OpenAPI
 
 
@@ -62,8 +64,19 @@ def _gen_schema(data: Union[Dict, List], example: bool = True) -> Dict:
     return schema
 
 
+def _load_json_yaml(s: str):
+    try:
+        return json.loads(s)
+    except json.JSONDecodeError:
+        try:
+            return yaml.safe_load(s)
+        except yaml.YAMLError:
+            raise ValueError("Not a valid JSON or YAML")
+
+
+# throws SpecError, ValueError
 def build_openapi(method: str, path: str, resp_code: int,
-                  request: Dict = None, response: Dict = None,
+                  request: str = None, response: str = None,
                   media_type: str = "application/json",
                   example: bool = True) -> Dict:
     oapi = {
@@ -87,10 +100,14 @@ def build_openapi(method: str, path: str, resp_code: int,
     }
 
     if request:
+        try:
+            data = _load_json_yaml(request)
+        except ValueError as e:
+            raise ValueError(f"Cannot load request data: {e}")
         oapi["paths"][path][method.lower()]["requestBody"] = {
             "content": {
                 media_type: {
-                    "schema": _gen_schema(request, example)
+                    "schema": _gen_schema(data, example)
                 }
             }
         }
@@ -98,10 +115,14 @@ def build_openapi(method: str, path: str, resp_code: int,
         del oapi["paths"][path][method.lower()]["requestBody"]
 
     if response:
-        oapi["paths"][path][method.lower()]["responses"][
-            resp_code]["content"] = {
+        try:
+            data = _load_json_yaml(response)
+        except ValueError as e:
+            raise ValueError(f"Cannot load response data: {e}")
+        oapi["paths"][path][method.lower()]["responses"][resp_code][
+            "content"] = {
             media_type: {
-                "schema": _gen_schema(response, example)
+                "schema": _gen_schema(data, example)
             }
         }
 

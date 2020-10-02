@@ -14,9 +14,7 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 import argparse
-import json
 import sys
-from json import JSONDecodeError
 from typing import Dict
 
 import yaml
@@ -28,18 +26,6 @@ from .inducoapi import build_openapi
 class _NoAliasDumper(yaml.Dumper):
     def ignore_aliases(self, data):
         return True
-
-
-def _load_file(path: str) -> Dict:
-    with open(path) as f:
-        try:
-            return json.load(f)
-        except JSONDecodeError:
-            f.seek(0)
-            try:
-                return yaml.safe_load(f)
-            except yaml.YAMLError:
-                raise ValueError(f"'{path}' is not a valid JSON or YAML")
 
 
 def _write_output(oapi: Dict, output: str) -> None:
@@ -88,15 +74,17 @@ def main():
     request = None
     if args.request:
         try:
-            request = _load_file(args.request)
-        except (OSError, ValueError) as e:
+            with open(args.request) as f:
+                request = f.read()
+        except OSError as e:
             sys.exit(f"Error reading request file\n{e}")
 
     response = None
     if args.response:
         try:
-            response = _load_file(args.response)
-        except (OSError, ValueError) as e:
+            with open(args.response) as f:
+                response = f.read()
+        except OSError as e:
             sys.exit(f"Error reading response file\n{e}")
 
     try:
@@ -105,6 +93,8 @@ def main():
                              media_type=args.media_type, example=args.example)
     except SpecError as e:
         sys.exit(f"OpenAPI validation error\n{e}")
+    except ValueError as e:
+        sys.exit(f"{e}")
 
     try:
         _write_output(oapi, args.output)
