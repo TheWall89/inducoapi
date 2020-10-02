@@ -74,11 +74,23 @@ def _load_json_yaml(s: str):
             raise ValueError("Not a valid JSON or YAML")
 
 
-# throws SpecError, ValueError
 def build_openapi(method: str, path: str, resp_code: int,
                   request: str = None, response: str = None,
                   media_type: str = "application/json",
                   example: bool = True) -> Dict:
+    """
+    Builds a dict containing a valid OpenAPI description document.
+    :param method: The HTTP request method to be generated
+    :param path: The resource path to be generated
+    :param resp_code: The HTTP response code to be generated
+    :param request: A JSON/YAML string containing a request example
+    :param response: A JSON/YAML string containing a request example
+    :param media_type: The desired media type to be used for request/response
+    :param example: If True, generates 'example:' fields in the OpenAPI
+    :return: A python dict containing a valid OpenAPI description document
+    :raises: openapi3.SpecError if the generated OpenAPI is not valid
+    :raises: ValueError if the data in request/response is not a valid JSON/YAML
+    """
     oapi = {
         "openapi": "3.0.0",
         "info": {
