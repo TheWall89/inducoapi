@@ -1,0 +1,10 @@
+openapi: 3.0.0
+info:
+  title: Custom Title
+  version: v1-custom
+paths:
+  /employees:
+    get:
+      responses:
+        200:
+          description: ''
