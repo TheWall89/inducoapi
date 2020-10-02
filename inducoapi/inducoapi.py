@@ -14,13 +14,13 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 import json
-from typing import Dict, Tuple, Any, Union, List
+from typing import Dict, Any, Union, List
 
 import yaml
 from openapi3 import OpenAPI
 
 
-def _get_type_ex(val: Any, example: bool = True) -> Tuple[str, Any]:
+def _get_type_ex(val: Any, example: bool = True) -> Dict:
     ex = val
     if val is None:
         # If no value is provided, assume string
@@ -104,6 +104,7 @@ def build_openapi(method: str, path: str, resp_code: int,
             data = _load_json_yaml(request)
         except ValueError as e:
             raise ValueError(f"Cannot load request data: {e}")
+        # noinspection PyTypeChecker,PyUnresolvedReferences
         oapi["paths"][path][method.lower()]["requestBody"] = {
             "content": {
                 media_type: {
@@ -112,6 +113,7 @@ def build_openapi(method: str, path: str, resp_code: int,
             }
         }
     else:
+        # noinspection PyTypeChecker,PyUnresolvedReferences
         del oapi["paths"][path][method.lower()]["requestBody"]
 
     if response:
@@ -119,6 +121,7 @@ def build_openapi(method: str, path: str, resp_code: int,
             data = _load_json_yaml(response)
         except ValueError as e:
             raise ValueError(f"Cannot load response data: {e}")
+        # noinspection PyTypeChecker,PyUnresolvedReferences
         oapi["paths"][path][method.lower()]["responses"][resp_code][
             "content"] = {
             media_type: {
