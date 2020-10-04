@@ -19,7 +19,7 @@ import sys
 import yaml
 from openapi3.errors import SpecError
 
-from .inducoapi import build_openapi
+from . import build_openapi, __version__
 
 
 class _NoAliasDumper(yaml.Dumper):
@@ -60,6 +60,9 @@ def _get_parser():
     p.add_argument("-iv", "--info-version", type=str, metavar="STR",
                    default="v1",
                    help="The version to be used in the 'info' field")
+    p.add_argument("-v", "--version", action="version",
+                   version=f"inducoapi {__version__}",
+                   help="Print module version and exit")
     return p
 
 
