@@ -1,4 +1,5 @@
 ![pytest](https://github.com/TheWall89/inducoapi/workflows/pytest/badge.svg?branch=master)
+[![PyPI version](https://badge.fury.io/py/inducoapi.svg)](https://badge.fury.io/py/inducoapi)
 
 # InducOapi
 
