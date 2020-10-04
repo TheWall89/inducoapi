@@ -2,49 +2,52 @@
 
 # InducOapi
 
-A simple python program to generate OpenApi Description Documents by supplying request/response bodies.
+A simple python module to generate OpenAPI Description Documents by supplying request/response bodies.
 
 ## Motivation
 
 Sometimes you have a fully functioning HTTP service without OpenAPI documentation.
 At some point in time, others may need to use your service.
 Writing the documentation by hand is a pain and can feel like an overwhelming job for complex services.
-_inducoapi_ helps you generate your OpenApi Description Documents by taking as input request/response examples plus some
+_inducoapi_ helps you generate your OpenAPI Description Documents by taking as input request/response examples plus some
 other information.
 
-The generated OpenApi documentation is validated with [openapi3](https://github.com/Dorthu/openapi3).
+The generated OpenAPI documentation is validated with [openapi3](https://github.com/Dorthu/openapi3).
 
-_Warning_: This program also generates the `example` fields in OpenApi schemas by default.
+_Warning_: This program also generates the `example` fields in OpenAPI schemas by default.
 If you have sensible data in your request/response files, disable this feature with `--no-example`.
 
 ## Installation
 
-We use [poetry](https://python-poetry.org/) for dependency management.
+With `pip`:
 
 ```shell script
-# clone repository
+pip install inducoapi
+```
+
+With [poetry](https://python-poetry.org/).
+
+```shell script
+git clone git@github.com:TheWall89/inducoapi.git
 cd inducoapi
-poetry install --no-root
+poetry install
 ```
 
 ## Usage
 
-### From python
-
-[test_inducoapi.py](tests/test_inducoapi.py) provides usage examples of the module from python.
-
 ### From CLI
-`inducoapi.py` provides its own help. Check it out with:
+
+`inducoapi` provides its own help. Check it out with:
 
 ```shell script
-poetry run inducoapi/inducoapi.py --help
+python -m inducoapi -h
 ```
 
 Let's consider a simple case: you have an HTTP service managing employees.
-We want to generate OpenApi spec for a GET on all the employees, returning a 200 status code:
+We want to generate OpenAPI spec for a GET on all the employees, returning a 200 status code:
 
 ```shell script
-poetry run inducoapi/inducoapi.py GET /employees 200
+python -m inducoapi GET /employees 200
 ```
 
 <details><summary>output</summary>
@@ -69,7 +72,7 @@ Let's add an argument with a JSON file containing a response example.
 Input examples can be found in [examples](examples).
 
 ```shell script
-poetry run inducoapi/inducoapi.py GET /employees 200 --response examples/employees.json
+python -m inducoapi GET /employees 200 --response examples/employees.json
 ```
 
 <details><summary>output</summary>
@@ -105,10 +108,10 @@ paths:
 
 </details>
 
-Finally, let's try a POST request with both request and response.
+Finally, let's try a POST request with both request and response examples.
 
 ```shell script
-poetry run inducoapi/inducoapi.py POST /employees 201 --request examples/new_employee_req.json --response examples/new_employee_resp.json
+python -m inducoapi POST /employees 201 --request examples/new_employee_req.json --response examples/new_employee_resp.json
 ```
 
 <details><summary>output</summary>
@@ -154,14 +157,19 @@ paths:
 
 </details>
 
-If you want to directly write the generated OpenApi spec in a YAML file, just add `--output openapi.yaml`
+If you want to directly write the generated OpenAPI spec in a YAML file, just add `--output openapi.yaml`
+
+### From python
+
+[test_inducoapi.py](tests/test_inducoapi.py) provides usage examples of the module from python.
 
 ## TODO list
 
 - [x] Add support for request/response files in YAML
 - [x] Add support for `application/yaml` content
-- [ ] Package module
-- [ ] Use resource definitions
+- [x] Customize title and version in info
+- [x] Package module
+- [ ] Generate resource definitions
 - [ ] Add support for `headers`
 - [ ] Add support for `links`
 - [ ] Add support for `format`
