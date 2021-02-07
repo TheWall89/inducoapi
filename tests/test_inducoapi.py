@@ -10,10 +10,12 @@ def test_get_employees_200():
 
 
 def test_get_employees_200_info():
-    oapi = build_openapi("GET", "/employees", 200, title="Custom Title",
-                         version="v1-custom")
+    oapi = build_openapi(
+        "GET", "/employees", 200, title="Custom Title", version="v1-custom"
+    )
     with open("tests/test_get_employees_200_info.yaml") as f:
         assert yaml.safe_load(f.read()) == oapi
+
 
 def test_get_employees_200_response():
     with open("examples/employees.json") as f:
@@ -26,8 +28,9 @@ def test_get_employees_200_response():
 def test_get_employees_200_response_noexample():
     with open("examples/employees.json") as f:
         response = f.read()
-    oapi = build_openapi("GET", "/employees", 200,
-                         response=response, example=False)
+    oapi = build_openapi(
+        "GET", "/employees", 200, response=response, example=False
+    )
     with open("tests/test_get_employees_200_response_noexample.yaml") as f:
         assert yaml.safe_load(f.read()) == oapi
 
@@ -35,8 +38,7 @@ def test_get_employees_200_response_noexample():
 def test_get_employees_200_response_yaml():
     with open("examples/employees.yaml") as f:
         response = f.read()
-    oapi = build_openapi("GET", "/employees", 200,
-                         response=response)
+    oapi = build_openapi("GET", "/employees", 200, response=response)
     with open("tests/test_get_employees_200_response.yaml") as f:
         assert yaml.safe_load(f.read()) == oapi
 
@@ -44,8 +46,13 @@ def test_get_employees_200_response_yaml():
 def test_get_employees_200_response_mediatype():
     with open("examples/employees.json") as f:
         response = f.read()
-    oapi = build_openapi("GET", "/employees", 200,
-                         response=response, media_type="application/yaml")
+    oapi = build_openapi(
+        "GET",
+        "/employees",
+        200,
+        response=response,
+        media_type="application/yaml",
+    )
     with open("tests/test_get_employees_200_response_mediatype.yaml") as f:
         assert yaml.safe_load(f.read()) == oapi
 
@@ -55,8 +62,9 @@ def test_post_employees_201_request_response():
         request = f.read()
     with open("examples/new_employee_resp.json") as f:
         response = f.read()
-    oapi = build_openapi("POST", "/employees", 201,
-                         request=request, response=response)
+    oapi = build_openapi(
+        "POST", "/employees", 201, request=request, response=response
+    )
     with open("tests/test_post_employees_201_request_response.yaml") as f:
         assert yaml.safe_load(f.read()) == oapi
 
@@ -65,8 +73,7 @@ def test_post_employees_201_request_invalid_json():
     with open("tests/invalid.json") as f:
         request = f.read()
     with pytest.raises(ValueError) as excinfo:
-        build_openapi("POST", "/employees", 201,
-                      request=request)
+        build_openapi("POST", "/employees", 201, request=request)
     assert "request" in str(excinfo)
 
 
@@ -74,8 +81,7 @@ def test_post_employees_201_request_invalid_yaml():
     with open("tests/invalid.yaml") as f:
         request = f.read()
     with pytest.raises(ValueError) as excinfo:
-        build_openapi("POST", "/employees", 201,
-                      request=request)
+        build_openapi("POST", "/employees", 201, request=request)
     assert "request" in str(excinfo)
 
 
@@ -83,8 +89,7 @@ def test_post_employees_201_response_invalid_json():
     with open("tests/invalid.json") as f:
         response = f.read()
     with pytest.raises(ValueError) as excinfo:
-        build_openapi("POST", "/employees", 201,
-                      response=response)
+        build_openapi("POST", "/employees", 201, response=response)
     assert "response" in str(excinfo)
 
 
@@ -92,6 +97,5 @@ def test_post_employees_201_response_invalid_yaml():
     with open("tests/invalid.yaml") as f:
         response = f.read()
     with pytest.raises(ValueError) as excinfo:
-        build_openapi("POST", "/employees", 201,
-                      response=response)
+        build_openapi("POST", "/employees", 201, response=response)
     assert "response" in str(excinfo)
