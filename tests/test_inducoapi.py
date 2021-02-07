@@ -25,6 +25,16 @@ def test_get_employees_200_response():
         assert yaml.safe_load(f.read()) == oapi
 
 
+def test_get_employees_200_response_ref():
+    with open("examples/employees.json") as f:
+        response = f.read()
+    oapi = build_openapi(
+        "GET", "/employees", 200, response=response, reference=True
+    )
+    with open("tests/test_get_employees_200_response_ref.yaml") as f:
+        assert yaml.safe_load(f.read()) == oapi
+
+
 def test_get_employees_200_response_noexample():
     with open("examples/employees.json") as f:
         response = f.read()

@@ -170,7 +170,7 @@ If you want to directly write the generated OpenAPI spec in a YAML file, just ad
 - [x] Add support for `application/yaml` content
 - [x] Customize title and version in info
 - [x] Package module
-- [ ] Generate resource definitions
+- [x] Support for `$ref` in response schemas
 - [ ] Add support for `headers`
 - [ ] Add support for `links`
 - [ ] Add support for `format`

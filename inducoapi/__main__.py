@@ -98,6 +98,14 @@ def _get_parser():
         help="The version to be used in the 'info' field",
     )
     p.add_argument(
+        "-ref",
+        "--reference",
+        action="store_true",
+        dest="reference",
+        default=False,
+        help="Generate response schema in components and create a '$ref'",
+    )
+    p.add_argument(
         "-v",
         "--version",
         action="version",
@@ -137,6 +145,7 @@ def main():
             response=response,
             media_type=args.media_type,
             example=args.example,
+            reference=args.reference,
             title=args.info_title,
             version=args.info_version,
         )
