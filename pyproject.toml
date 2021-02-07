@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "inducoapi"
-version = "1.0.0"
+version = "1.1.0"
 description = "A simple python program to generate OpenApi documentation by supplying request/response bodies."
 authors = ["Matteo Pergolesi <matpergo@gmail.com>"]
 license = "Apache License 2.0"
