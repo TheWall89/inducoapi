@@ -54,8 +54,8 @@ def _get_parser():
         action="append",
         type=str,
         dest="parameters",
-        metavar="PARAM",
-        help="A parameter for the request defined as 'name,in'. '-p' can be "
+        metavar="NAME,LOCATION",
+        help="A parameter for the request. '-p' can be "
              "repeated multiple times: -p limit,query -p token,header",
     )
     p.add_argument(
