@@ -14,7 +14,7 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 import json
-from typing import Any, Dict, List, Union
+from typing import Any, Dict, List, Tuple, Union
 
 import yaml
 from openapi3 import OpenAPI
@@ -72,6 +72,7 @@ def build_openapi(
     method: str,
     path: str,
     resp_code: int,
+    parameters: List[Tuple[str, str]] = None,
     request: str = None,
     response: str = None,
     media_type: str = "application/json",
@@ -85,6 +86,7 @@ def build_openapi(
     :param method: The HTTP request method to be generated
     :param path: The resource path to be generated
     :param resp_code: The HTTP response code to be generated
+    :param parameters: The operation parameters as a list of tuples: ("name", "in")
     :param request: A JSON/YAML string containing a request example
     :param response: A JSON/YAML string containing a request example
     :param media_type: The desired media type to be used for request/response
@@ -115,6 +117,11 @@ def build_openapi(
             }
         },
     }
+
+    if parameters:
+        oapi["paths"][path][method.lower()]["parameters"] = [
+            {"name": n, "in": i, "description": ""} for n, i in parameters
+        ]
 
     if request:
         try:

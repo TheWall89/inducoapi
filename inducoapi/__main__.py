@@ -19,7 +19,7 @@ import sys
 import yaml
 from openapi3.errors import SpecError
 
-from . import build_openapi, __version__
+from . import __version__, build_openapi
 
 
 class _NoAliasDumper(yaml.Dumper):
@@ -47,6 +47,16 @@ def _get_parser():
     p.add_argument("path", type=str, metavar="PATH", help="URI path")
     p.add_argument(
         "resp_code", type=int, metavar="CODE", help="HTTP response code"
+    )
+    p.add_argument(
+        "-p",
+        "--parameter",
+        action="append",
+        type=str,
+        dest="parameters",
+        metavar="PARAM",
+        help="A parameter for the request defined as 'name,in'. '-p' can be "
+             "repeated multiple times: -p limit,query -p token,header",
     )
     p.add_argument(
         "-req",
@@ -136,11 +146,19 @@ def main():
     else:
         response = None
 
+    if args.parameters:
+        parameters = [
+            (p.split(",", 2)[0], p.split(",", 2)[1]) for p in args.parameters
+        ]
+    else:
+        parameters = None
+
     try:
         oapi = build_openapi(
             args.method,
             args.path,
             args.resp_code,
+            parameters=parameters,
             request=request,
             response=response,
             media_type=args.media_type,
