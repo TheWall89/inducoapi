@@ -18,7 +18,7 @@ other information.
 The generated OpenAPI documentation is validated
 with [openapi-spec-validator](https://github.com/p1c2u/openapi-spec-validator).
 
-_Warning_: This program also generates the `example` fields in OpenAPI schemas by default. If you have sensible data in
+_Warning_: This program also generates the `example` fields in OpenAPI schemas by default. If you have sensitive data in
 your request/response files, disable this feature with `--no-example`.
 
 ## Installation
