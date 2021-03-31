@@ -13,11 +13,12 @@
 #  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
+import copy
 import json
 from typing import Any, Dict, List, Tuple, Union
 
 import yaml
-from openapi3 import OpenAPI
+from openapi_spec_validator import validate_spec
 
 
 def _get_type_ex(val: Any, example: bool = True) -> Dict:
@@ -71,7 +72,7 @@ def _load_json_yaml(s: str):
 def build_openapi(
     method: str,
     path: str,
-    resp_code: int,
+    resp_code: str,
     parameters: List[Tuple[str, str]] = None,
     request: str = None,
     response: str = None,
@@ -119,9 +120,19 @@ def build_openapi(
     }
 
     if parameters:
-        oapi["paths"][path][method.lower()]["parameters"] = [
-            {"name": n, "in": i, "description": ""} for n, i in parameters
-        ]
+        param_list = []
+        for name, location in parameters:
+            required = True if location == "path" else False
+            param_list.append(
+                {
+                    "name": name,
+                    "in": location,
+                    "required": required,
+                    "description": "",
+                    "schema": {},
+                }
+            )
+        oapi["paths"][path][method.lower()]["parameters"] = param_list
 
     if request:
         try:
@@ -161,7 +172,6 @@ def build_openapi(
                 "content"
             ] = {media_type: {"schema": _gen_schema(data, example)}}
 
-    # Validate
-    OpenAPI(oapi)
+    validate_spec(copy.deepcopy(oapi))
 
     return oapi

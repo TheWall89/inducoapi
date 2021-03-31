@@ -6,12 +6,21 @@ paths:
   /employees:
     get:
       parameters:
+        - name: id
+          in: path
+          description: ''
+          required: True
+          schema: {}
         - name: limit
           in: query
           description: ''
+          required: False
+          schema: {}
         - name: token
           in: header
           description: ''
+          required: False
+          schema: {}
       responses:
         200:
           description: ''

@@ -17,7 +17,7 @@ import argparse
 import sys
 
 import yaml
-from openapi3.errors import SpecError
+from openapi_spec_validator.exceptions import OpenAPIValidationError
 
 from . import __version__, build_openapi
 
@@ -46,7 +46,7 @@ def _get_parser():
     )
     p.add_argument("path", type=str, metavar="PATH", help="URI path")
     p.add_argument(
-        "resp_code", type=int, metavar="CODE", help="HTTP response code"
+        "resp_code", type=str, metavar="CODE", help="HTTP response code"
     )
     p.add_argument(
         "-p",
@@ -167,7 +167,7 @@ def main():
             title=args.info_title,
             version=args.info_version,
         )
-    except SpecError as e:
+    except OpenAPIValidationError as e:
         sys.exit(f"OpenAPI validation error\n{e}")
     except ValueError as e:
         sys.exit(f"{e}")
