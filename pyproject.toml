@@ -11,7 +11,7 @@ keywords = ['openapi', 'rest']
 
 [tool.poetry.dependencies]
 python = "^3.6"
-pyyaml = "^5.3.1"
+pyyaml = ">=5.3.1"
 openapi-spec-validator = "^0.3.0"
 
 [tool.poetry.dev-dependencies]
