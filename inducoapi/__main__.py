@@ -17,7 +17,7 @@ import argparse
 import sys
 
 import yaml
-from openapi_spec_validator.exceptions import OpenAPIValidationError
+from openapi_spec_validator.exceptions import OpenAPISpecValidatorError
 
 from . import __version__, build_openapi
 
