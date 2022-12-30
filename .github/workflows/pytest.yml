@@ -20,7 +20,7 @@ jobs:
       # You can use PyPy versions in python-version.
       # For example, pypy2 and pypy3
       matrix:
-        python-version: [ 3.6.15, 3.7.15, 3.8.15 ]
+        python-version: [ 3.6, 3.7, 3.8 ]
         poetry-version: [ 1.0.10 ]
 
     # Steps represent a sequence of tasks that will be executed as part of the job
