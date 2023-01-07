@@ -10,9 +10,9 @@ on:
     # Run at 22:00 on Friday.
     - cron:  '00 22 * * 5'
   push:
-    branches: [ master, development ]
+    branches: [ master ]
   pull_request:
-    branches: [ master, development ]
+    branches: [ master ]
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
