@@ -71,4 +71,6 @@ jobs:
         run: poetry build
 
       - name: Publish
+        env:
+          POETRY_PYPI_TOKEN_PYPI: ${{ secrets.POETRY_PYPI_TOKEN_PYPI }}
         run: poetry publish
