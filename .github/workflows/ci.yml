@@ -8,24 +8,24 @@ on:
   schedule:
     # * is a special character in YAML so you have to quote this string
     # Run at 22:00 on Friday.
-    - cron:  '00 22 * * 5'
+    - cron: "00 22 * * 5"
   push:
-    branches: [ master ]
+    branches: [master]
   pull_request:
-    branches: [ master ]
+    branches: [master]
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
-  build:
+  test:
     # The type of runner that the job will run on
     runs-on: ubuntu-20.04
     strategy:
       # You can use PyPy versions in python-version.
       # For example, pypy2 and pypy3
       matrix:
-        python-version: [ '3.7', '3.8', '3.9', '3.10' ]
-        poetry-version: [ '1.3.1' ]
+        python-version: ["3.7", "3.8", "3.9", "3.10"]
+        poetry-version: ["1.3.1"]
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
