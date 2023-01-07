@@ -1,7 +1,7 @@
-![pytest](https://github.com/TheWall89/inducoapi/workflows/pytest/badge.svg?branch=master)
-[![PyPI version](https://badge.fury.io/py/inducoapi.svg)](https://badge.fury.io/py/inducoapi)
-
 # InducOapi
+
+[![ci](https://github.com/TheWall89/inducoapi/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/TheWall89/inducoapi/actions/workflows/ci.yml)
+[![PyPI version](https://badge.fury.io/py/inducoapi.svg)](https://badge.fury.io/py/inducoapi)
 
 A simple python module to generate OpenAPI Description Documents by supplying request/response bodies.
 
@@ -12,13 +12,13 @@ A simple python module to generate OpenAPI Description Documents by supplying re
 Sometimes you have a fully functioning HTTP service without OpenAPI documentation. At some point in time, others may
 need to use your service. Writing the documentation by hand is a pain and can feel like an overwhelming job for complex
 services.
-_inducoapi_ helps you generate your OpenAPI Description Documents by taking as input request/response examples plus some
+*inducoapi* helps you generate your OpenAPI Description Documents by taking as input request/response examples plus some
 other information.
 
 The generated OpenAPI documentation is validated
 with [openapi-spec-validator](https://github.com/p1c2u/openapi-spec-validator).
 
-_Warning_: This program also generates the `example` fields in OpenAPI schemas by default. If you have sensitive data in
+*Warning*: This program also generates the `example` fields in OpenAPI schemas by default. If you have sensitive data in
 your request/response files, disable this feature with `--no-example`.
 
 ## Installation
