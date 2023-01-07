@@ -45,7 +45,7 @@ jobs:
       - name: Run poetry image
         uses: abatilo/actions-poetry@v2
         with:
-          poetry-version: ${{env.POETRY_VERSION}}
+          poetry-version: ${{ env.POETRY_VERSION }}
 
       - name: Install dependencies
         run: poetry install --no-root
@@ -60,15 +60,15 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
 
-      - name: Set up Python ${{env.PYTHON_PUBLISH_VERSION}}
+      - name: Set up Python ${{ env.PYTHON_PUBLISH_VERSION }}
         uses: actions/setup-python@v4
         with:
-          python-version: ${{env.PYTHON_PUBLISH_VERSION}}
+          python-version: ${{ env.PYTHON_PUBLISH_VERSION }}
 
       - name: Run poetry image
         uses: abatilo/actions-poetry@v2
         with:
-          poetry-version: ${{env.POETRY_VERSION}}
+          poetry-version: ${{ env.POETRY_VERSION }}
 
       - name: Build
         run: poetry build
