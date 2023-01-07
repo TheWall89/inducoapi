@@ -1,6 +1,6 @@
 # InducOapi
 
-[![tests](https://github.com/TheWall89/inducoapi/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/TheWall89/inducoapi/actions/workflows/ci.yml)
+[![ci](https://github.com/TheWall89/inducoapi/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/TheWall89/inducoapi/actions/workflows/ci.yml)
 [![PyPI version](https://badge.fury.io/py/inducoapi.svg)](https://badge.fury.io/py/inducoapi)
 
 A simple python module to generate OpenAPI Description Documents by supplying request/response bodies.
