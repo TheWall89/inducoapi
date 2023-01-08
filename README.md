@@ -41,6 +41,20 @@ poetry install
 
 ### From CLI
 
+`inducoapi` provides its own command. You can simply execute it with
+
+```shell script
+inducoapi
+```
+
+If you get a `command not found` error, try to activate your virtualenv or run `poetry shell` first.
+
+You can also run `inducoapi` in the classic way:
+
+```shell script
+python -m inducoapi
+```
+
 `inducoapi` provides its own help. Check it out with:
 
 ```shell script
