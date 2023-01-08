@@ -23,18 +23,24 @@ your request/response files, disable this feature with `--no-example`.
 
 ## Installation
 
-With `pip`:
+### With `pip`
 
 ```shell script
 pip install inducoapi
 ```
 
-With [poetry](https://python-poetry.org/).
+### With [poetry](https://python-poetry.org/)
 
 ```shell script
 git clone git@github.com:TheWall89/inducoapi.git
 cd inducoapi
 poetry install
+```
+
+To run unit-tests:
+
+```shell script
+poetry run pytest
 ```
 
 ## Usage
