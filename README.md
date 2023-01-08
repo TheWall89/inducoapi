@@ -55,11 +55,15 @@ You can also run `inducoapi` in the classic way:
 python -m inducoapi
 ```
 
+#### Help
+
 `inducoapi` provides its own help. Check it out with:
 
 ```shell script
 python -m inducoapi -h
 ```
+
+#### Examples
 
 Let's consider a simple case: you have an HTTP service managing employees. We want to generate the OpenAPI Description
 Document for a GET on all the employees, returning a 200 status code:
