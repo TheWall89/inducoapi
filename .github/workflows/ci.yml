@@ -3,10 +3,7 @@ name: ci
 # Controls when the action will run. Triggers the workflow on push or pull request
 # events but only for the master branch
 on:
-  schedule:
-    # * is a special character in YAML so you have to quote this string
-    # Run at 22:00 on Friday.
-    - cron: "00 22 * * 5"
+  workflow_dispatch:
   push:
     branches: [master]
   pull_request:
