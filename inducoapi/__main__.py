@@ -96,7 +96,7 @@ def _get_parser():
         "--openapi-version",
         type=str,
         metavar="STR",
-        default="3.0.0",
+        default="3.1.0",
         help="The version of the OpenAPI spec",
     )
     p.add_argument(
