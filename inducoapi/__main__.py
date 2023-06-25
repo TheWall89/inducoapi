@@ -92,6 +92,14 @@ def _get_parser():
         help="Do not generate schema examples",
     )
     p.add_argument(
+        "-ov",
+        "--openapi-version",
+        type=str,
+        metavar="STR",
+        default="3.1.0",
+        help="The version of the OpenAPI spec",
+    )
+    p.add_argument(
         "-it",
         "--info-title",
         type=str,
@@ -166,8 +174,9 @@ def main():
             reference=args.reference,
             title=args.info_title,
             version=args.info_version,
+            openapi_version=args.openapi_version,
         )
-    except OpenAPIValidationError as e:
+    except OpenAPISpecValidatorError as e:
         sys.exit(f"OpenAPI validation error\n{e}")
     except ValueError as e:
         sys.exit(f"{e}")
