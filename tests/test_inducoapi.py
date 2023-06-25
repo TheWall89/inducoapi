@@ -2,9 +2,12 @@ import pytest
 from inducoapi.inducoapi import build_openapi
 from openapi_spec_validator.readers import read_from_filename
 
+@pytest.fixture(params=["3.0.0", "3.1.0"])
+def openapi_version(request):
+    return request.param
 
-def test_get_employees_200():
-    oapi = build_openapi("GET", "/employees", "200")
+def test_get_employees_200(openapi_version):
+    oapi = build_openapi("GET", "/employees", "200", openapi_version=openapi_version)
     spec_dict, spec_url = read_from_filename(
         "tests/test_get_employees_200.yaml"
     )
