@@ -96,6 +96,7 @@ def build_openapi(
     :param reference: If True, generates response content schemas in 'components'
     :param title: The title of the OpenAPI document (in info)
     :param version: The version of the OpenAPI document (in info)
+    :param openapi_version: The version of the OpenAPI spec
     :return: A python dict containing a valid OpenAPI description document
     :raises: openapi3.SpecError if the generated OpenAPI is not valid
     :raises: ValueError if the data in request/response is not a valid JSON/YAML
