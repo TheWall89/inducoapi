@@ -18,7 +18,7 @@ import json
 from typing import Any, Dict, List, Tuple, Union
 
 import yaml
-from openapi_spec_validator import validate_spec
+from openapi_spec_validator import validate
 
 
 def _get_type_ex(val: Any, example: bool = True) -> Dict:
@@ -175,6 +175,6 @@ def build_openapi(
             ] = {media_type: {"schema": _gen_schema(data, example)}}
 
     # By default, OpenAPI spec version is detected
-    validate_spec(copy.deepcopy(oapi))
+    validate(copy.deepcopy(oapi))
 
     return oapi
