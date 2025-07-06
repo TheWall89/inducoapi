@@ -12,7 +12,7 @@ on:
     types: [released]
 
 env:
-  POETRY_VERSION: "1.3.1"
+  POETRY_VERSION: "2.1.3"
   PYTHON_PUBLISH_VERSION: "3.10"
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
@@ -25,7 +25,7 @@ jobs:
       # You can use PyPy versions in python-version.
       # For example, pypy2 and pypy3
       matrix:
-        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
+        python-version: ["3.9", "3.10", "3.11", "3.12", "3.13"]
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
