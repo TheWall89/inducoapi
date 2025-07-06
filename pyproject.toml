@@ -10,11 +10,11 @@ homepage = "https://github.com/TheWall89/inducoapi"
 keywords = ['openapi', 'rest']
 
 [tool.poetry.dependencies]
-python = ">=3.8.0,<3.13"
+python = ">=3.9.0,<3.14"
 pyyaml = "^6.0"
 openapi-spec-validator = "^0.7"
 
-[tool.poetry.dev-dependencies]
+[tool.poetry.group.dev.dependencies]
 pytest = "^7.2"
 
 [tool.poetry.scripts]
