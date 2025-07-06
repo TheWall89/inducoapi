@@ -40,6 +40,7 @@ poetry install
 To run unit-tests:
 
 ```shell script
+poetry install --with=dev
 poetry run pytest
 ```
 
