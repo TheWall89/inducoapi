@@ -22,5 +22,5 @@ paths:
           required: false
           schema: {}
       responses:
-        200:
+        "200":
           description: ''
