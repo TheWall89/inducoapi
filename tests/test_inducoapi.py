@@ -15,7 +15,7 @@ def test_get_employees_200(openapi_version):
 def test_get_employees_200_params(openapi_version):
     oapi = build_openapi(
         "GET",
-        "/employees",
+        "/employees/{id}",
         "200",
         parameters=[("id", "path"), ("limit", "query"), ("token", "header")],
         openapi_version=openapi_version,
