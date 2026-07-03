@@ -37,13 +37,6 @@ cd inducoapi
 poetry install
 ```
 
-To run unit-tests:
-
-```shell script
-poetry install --with=dev
-poetry run pytest
-```
-
 ## Usage
 
 ### From CLI
@@ -236,6 +229,20 @@ add `--output openapi.yaml`
 ### From python
 
 [test_inducoapi.py](tests/test_inducoapi.py) provides usage examples of the module from python.
+
+## Dev
+
+If you have https://taskfile.dev/:
+
+```shell script
+task test
+```
+
+Otherwise:
+```shell script
+poetry install --with=dev
+poetry run pytest
+```
 
 ## TODO list
 
