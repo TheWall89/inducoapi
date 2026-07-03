@@ -33,7 +33,7 @@ tasks:
       - sed -i 's/^__version__ = ".*"/__version__ = "{{.VERSION}}"/' inducoapi/__init__.py
       - git add pyproject.toml inducoapi/__init__.py
       - git commit -m "Bump version to {{.VERSION}}"
-      - git push -u origin release-{{.VERSION}}
+      #- git push -u origin release-{{.VERSION}}
 
   release:tag:
     desc: 'Tag master with a new version and push the tag. Run this AFTER the release PR is merged. Usage: task release:tag VERSION=2.1.14'
@@ -46,4 +46,4 @@ tasks:
       - git checkout master
       - git pull origin master
       - git tag v{{.VERSION}}
-      - git push origin v{{.VERSION}}
+      #- git push origin v{{.VERSION}}
