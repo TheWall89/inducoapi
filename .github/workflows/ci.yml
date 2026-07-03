@@ -14,6 +14,7 @@ on:
 env:
   POETRY_VERSION: "2.4.1"
   PYTHON_PUBLISH_VERSION: "3.10"
+  TASK_VERSION: "3.48.0"
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -42,11 +43,16 @@ jobs:
         with:
           poetry-version: ${{ env.POETRY_VERSION }}
 
+      - name: Set up Task
+        uses: arduino/setup-task@v2
+        with:
+          version: ${{ env.TASK_VERSION }}
+
       - name: Install dependencies
-        run: poetry install --with=dev --no-root
+        run: task dev
 
       - name: Test with pytest
-        run: poetry run pytest
+        run: task test
 
   publish:
     if: github.event_name == 'release'
@@ -66,10 +72,15 @@ jobs:
         with:
           poetry-version: ${{ env.POETRY_VERSION }}
 
+      - name: Set up Task
+        uses: arduino/setup-task@v2
+        with:
+          version: ${{ env.TASK_VERSION }}
+
       - name: Build
-        run: poetry build
+        run: task build
 
       - name: Publish
         env:
           POETRY_PYPI_TOKEN_PYPI: ${{ secrets.POETRY_PYPI_TOKEN_PYPI }}
-        run: poetry publish
+        run: task publish

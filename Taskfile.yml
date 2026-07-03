@@ -9,7 +9,7 @@ tasks:
   dev:
     desc: Install project dependencies including the dev group
     cmds:
-      - poetry install --with=dev
+      - poetry install --with=dev --no-root
 
   test:
     desc: Run unit tests
@@ -47,3 +47,14 @@ tasks:
       - git pull origin master
       - git tag v{{.VERSION}}
       - git push origin v{{.VERSION}}
+
+  build:
+    desc: Build the package
+    cmds:
+      - poetry build
+
+  publish:
+    desc: Publish the package to PyPI (expects POETRY_PYPI_TOKEN_PYPI to be set)
+    deps: [build]
+    cmds:
+      - poetry publish
