@@ -12,7 +12,7 @@ on:
     types: [released]
 
 env:
-  POETRY_VERSION: "2.1.3"
+  POETRY_VERSION: "2.4.1"
   PYTHON_PUBLISH_VERSION: "3.10"
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
@@ -20,7 +20,7 @@ jobs:
   # This workflow contains a single job called "build"
   test:
     # The type of runner that the job will run on
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     strategy:
       # You can use PyPy versions in python-version.
       # For example, pypy2 and pypy3
@@ -51,7 +51,7 @@ jobs:
   publish:
     if: github.event_name == 'release'
     needs: test
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v4
