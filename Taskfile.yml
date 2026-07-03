@@ -45,7 +45,7 @@ tasks:
     cmds:
       - git checkout master
       - git pull origin master
-      - git tag v{{.VERSION}}
+      - git tag -a v{{.VERSION}} -m "Release v{{.VERSION}}"
       - git push origin v{{.VERSION}}
 
   build:
