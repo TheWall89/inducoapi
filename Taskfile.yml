@@ -18,12 +18,10 @@ tasks:
       - poetry run pytest
 
   release:branch:
-    desc: 'Bump version, create a release branch and open a PR. Usage: task release:branch VERSION=2.1.14'
+    desc: 'Bump version, create a release branch. Usage: task release:branch VERSION=2.1.14'
     preconditions:
       - sh: '[ -n "{{.VERSION}}" ]'
         msg: "VERSION is required, e.g. task release:branch VERSION=2.1.14"
-      - sh: command -v gh
-        msg: "GitHub CLI (gh) is required but was not found in PATH"
       - sh: git diff --quiet && git diff --cached --quiet
         msg: "Working tree is not clean, commit or stash your changes first"
       - sh: '[ "$(git branch --show-current)" = "master" ]'
@@ -36,7 +34,6 @@ tasks:
       - git add pyproject.toml inducoapi/__init__.py
       - git commit -m "Bump version to {{.VERSION}}"
       - git push -u origin release-{{.VERSION}}
-      - gh pr create --fill --base master --head release-{{.VERSION}}
 
   release:tag:
     desc: 'Tag master with a new version and push the tag. Run this AFTER the release PR is merged. Usage: task release:tag VERSION=2.1.14'
