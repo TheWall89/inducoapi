@@ -44,7 +44,7 @@ jobs:
           poetry-version: ${{ env.POETRY_VERSION }}
 
       - name: Set up Task
-        uses: arduino/setup-task@v2
+        uses: arduino/setup-task@v3
         with:
           version: ${{ env.TASK_VERSION }}
 
@@ -73,7 +73,7 @@ jobs:
           poetry-version: ${{ env.POETRY_VERSION }}
 
       - name: Set up Task
-        uses: arduino/setup-task@v2
+        uses: arduino/setup-task@v3
         with:
           version: ${{ env.TASK_VERSION }}
 
